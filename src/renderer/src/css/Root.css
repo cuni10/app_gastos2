@@ -1,0 +1,79 @@
+:root {
+  --primary-accent: #74b1be;
+  --bg-dark: #2f3241;
+  --text-light: #ffffff;
+  --text-muted: #a0a0a0;
+  --card-bg: #3a3e50;
+}
+
+:root {
+  --bg-dark: #1e1e26;
+  --bg-card: #2a2a35;
+  --accent: #74b1be;
+  --accent-soft: rgba(116, 177, 190, 0.1);
+  --text-main: #ffffff;
+  --text-muted: #a0a0b8;
+  --border: #3f3f4d;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-layout {
+  padding-top: 32px;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.sidebar-component {
+  flex-shrink: 0;
+}
+
+.outlet-component {
+  flex: 1;
+  width: 100%;
+  overflow: auto;
+}
+
+/* Estilos para navegadores basados en Webkit (Chrome, Safari, Edge, Brave) */
+
+/* 1. Definimos el ancho de la barra */
+.outlet-component::-webkit-scrollbar {
+  width: 12px; /* Espacio total de la barra */
+  height: 12px; /* Para scroll horizontal si existiera */
+}
+
+/* 2. El fondo de la barra (el carril) */
+.outlet-component::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+/* 3. La pieza que se desplaza */
+.outlet-component::-webkit-scrollbar-thumb {
+  background-color: var(--primary-accent);
+  border-radius: 20px; /* Bordes redondeados */
+
+  /* Este borde crea un espacio entre la barra y el borde del contenedor */
+  border: 3px solid var(--bg-dark);
+}
+
+/* 4. Efecto cuando el usuario pasa el mouse */
+.outlet-component::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-light); /* Resalta al pasar el mouse */
+}
+
+/* 5. Soporte para Firefox (Estándar moderno) */
+.outlet-component {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-accent) var(--bg-dark);
+}

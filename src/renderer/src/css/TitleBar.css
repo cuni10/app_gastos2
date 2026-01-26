@@ -1,0 +1,62 @@
+/* Contenedor principal de la barra */
+.titlebar {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  justify-content: space-between;
+  height: 32px; /* Altura estándar de barra de título */
+  background-color: #2f3241; /* Ajusta a tu tema */
+  color: #a9b1d6;
+  user-select: none; /* Evita que se seleccione texto al arrastrar */
+}
+
+/* ZONA DE ARRASTRE: Esto permite mover la ventana */
+.titlebar-drag-region {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-size: 12px;
+  /* Esta propiedad es la que hace la magia en Electron */
+  -webkit-app-region: drag;
+}
+
+/* CONTENEDOR DE BOTONES: Importante quitar el arrastre aquí */
+.titlebar-controls {
+  display: flex;
+  height: 100%;
+  /* Sin esto, los botones no recibirán clics */
+  -webkit-app-region: no-drag;
+}
+
+/* Estilo de los botones */
+.control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: #74b1be;
+  transition: background-color 0.2s;
+  cursor: default;
+}
+
+.control-button:hover {
+  background-color: #32344a;
+}
+
+/* Estilo especial para el botón de cerrar */
+.control-button.close:hover {
+  background-color: #f44336;
+}
+
+/* Estilo de los iconos (puedes usar SVGs o texto) */
+.control-button svg {
+  width: 12px;
+  height: 12px;
+}

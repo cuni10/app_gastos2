@@ -1,7 +1,20 @@
 import { useState, useEffect } from 'react'
-import { Plus, TrendingUp, Calendar, AlertCircle } from 'lucide-react'
+import { Plus, Calendar, AlertCircle, Clock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
 import '../css/Dashboard.css'
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -9,6 +22,13 @@ const Dashboard = () => {
   const [totalMes, setTotalMes] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [currentDateTime, setCurrentDateTime] = useState(new Date())
+  const [monthlyData, setMonthlyData] = useState({})
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentDateTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +51,36 @@ const Dashboard = () => {
         }, 0)
 
         setTotalMes(gastosMes)
+
+        // Calcular gastos por mes (últimos 6 meses)
+        const meses = {}
+        const mesAbreviados = []
+
+        for (let i = 5; i >= 0; i--) {
+          const fecha = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1)
+          const mesAbrev = fecha.toLocaleString('es-AR', { month: 'short' }).toUpperCase()
+          const clave = `${mesAbrev}-${fecha.getFullYear()}`
+          meses[clave] = 0
+          mesAbreviados.push({ clave, label: mesAbrev })
+        }
+
+        datos.forEach((gasto) => {
+          const fecha = new Date(gasto.fechaPago)
+          const mesAbrev = fecha.toLocaleString('es-AR', { month: 'short' }).toUpperCase()
+          const clave = `${mesAbrev}-${fecha.getFullYear()}`
+
+          if (Object.prototype.hasOwnProperty.call(meses, clave)) {
+            meses[clave] += gasto.monto
+          }
+        })
+
+        // Crear labels solo con el mes (más limpio visualmente)
+        const monthlyDataFormatted = {}
+        mesAbreviados.forEach(({ clave, label }) => {
+          monthlyDataFormatted[label] = meses[clave]
+        })
+
+        setMonthlyData(monthlyDataFormatted)
         setError(null)
       } catch (err) {
         console.error('Error al cargar datos:', err)
@@ -67,17 +117,81 @@ const Dashboard = () => {
   ]
   const mesActual = mesesNombres[new Date().getMonth()]
 
+  const chartData = {
+    labels: Object.keys(monthlyData),
+    datasets: [
+      {
+        label: 'Gastos por mes',
+        data: Object.values(monthlyData),
+        borderColor: '#00bcd4',
+        backgroundColor: 'rgba(0, 188, 212, 0.1)',
+        borderWidth: 2,
+        pointBackgroundColor: '#00bcd4',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: true,
+        tension: 0.4
+      }
+    ]
+  }
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          font: { size: 12 }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)'
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.6)',
+          font: { size: 11 }
+        }
+      },
+      x: {
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)'
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.6)',
+          font: { size: 11 }
+        }
+      }
+    }
+  }
+
   return (
     <div className="dashboard-container">
-      {/* Header */}
-      <div className="dashboard-header">
-        <div className="logo-section">
-          <div className="logo-placeholder">
-            <span>💰</span>
+      {/* Header con Fecha/Hora y Título */}
+      <div className="dashboard-header-new">
+        <div className="header-top">
+          <div className="title-section">
+            <h1>Gastos {mesActual}</h1>
+            <p className="total-mes">
+              ${totalMes.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+            </p>
           </div>
-          <div className="header-text">
-            <h1>Gestor de Gastos</h1>
-            <p>Control de tu economía personal</p>
+          <div className="datetime-section">
+            <div className="datetime-display">
+              <Calendar size={18} />
+              <span>{currentDateTime.toLocaleDateString('es-AR')}</span>
+            </div>
+            <div className="datetime-display">
+              <Clock size={18} />
+              <span>{currentDateTime.toLocaleTimeString('es-AR')}</span>
+            </div>
           </div>
         </div>
         <button className="btn-agregar-principal" onClick={handleAgregarGasto}>
@@ -93,52 +207,25 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-header">
-            <Calendar size={20} />
-            <span className="stat-label">Gastos del Mes</span>
+      {/* Gráfica Comparativa */}
+      {historial.length > 0 && (
+        <div className="chart-section">
+          <h2>Comparativa de Gastos</h2>
+          <div className="chart-container">
+            <Line data={chartData} options={chartOptions} />
           </div>
-          <div className="stat-value">
-            ${totalMes.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-          </div>
-          <div className="stat-sublabel">{mesActual}</div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-header">
-            <TrendingUp size={20} />
-            <span className="stat-label">Total Registros</span>
-          </div>
-          <div className="stat-value">{historial.length}</div>
-          <div className="stat-sublabel">en el historial</div>
-        </div>
-
-        {historial.length > 0 && (
-          <div className="stat-card">
-            <div className="stat-header">
-              <TrendingUp size={20} />
-              <span className="stat-label">Promedio por Gasto</span>
-            </div>
-            <div className="stat-value">
-              $
-              {(totalMes / (historial.length || 1)).toLocaleString('es-AR', {
-                minimumFractionDigits: 2
-              })}
-            </div>
-            <div className="stat-sublabel">este mes</div>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Últimos Gastos */}
       <div className="recent-section">
         <div className="section-header">
-          <h2>Últimos Gastos</h2>
-          <button className="link-ver-todos" onClick={() => navigate('/historial')}>
-            Ver todos →
-          </button>
+          <h2>Últimos Registros</h2>
+          {historial.length > 0 && (
+            <button className="link-ver-todos" onClick={() => navigate('/historial')}>
+              Ver todos →
+            </button>
+          )}
         </div>
 
         {loading ? (

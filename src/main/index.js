@@ -20,7 +20,7 @@ function createWindow() {
     }
   })
 
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools({ mode: 'undocked' })
   // Muestra la ventana cuando esté lista para evitar pantalla blanca
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

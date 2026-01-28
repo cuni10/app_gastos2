@@ -1,4 +1,4 @@
-import AgregarGasto2 from '../components/AgregarGasto2'
+import AgregarGasto2 from '../components/AgregarGasto3'
 
 function Agregar() {
   return (

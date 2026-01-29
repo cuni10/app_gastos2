@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/logo.ico?asset'
 
 import dbManager from './db'
 
@@ -10,10 +10,11 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 960,
     height: 640,
+    title: 'JMT Automotores',
     show: false,
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon: icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -23,6 +24,7 @@ function createWindow() {
   mainWindow.webContents.openDevTools()
   // Muestra la ventana cuando esté lista para evitar pantalla blanca
   mainWindow.on('ready-to-show', () => {
+    mainWindow.setTitle('JMT Automotores')
     mainWindow.show()
   })
 
@@ -103,12 +105,6 @@ app.whenReady().then(() => {
   // Reabre la ventana si se hace clic en el icono de la aplicación en el dock (macOS)
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-
-  // Registrar F12 manualmente
-  globalShortcut.register('F12', () => {
-    const win = BrowserWindow.getFocusedWindow()
-    if (win) win.webContents.toggleDevTools()
   })
 })
 

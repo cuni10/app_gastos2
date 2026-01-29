@@ -12,6 +12,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: app_gastos2
+  icon: build/logo.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

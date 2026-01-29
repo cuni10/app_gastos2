@@ -1,4 +1,5 @@
 import '../css/TitleBar.css'
+import icon from '../../../../resources/logo.ico?asset'
 
 const TitleBar = () => {
   const handleControl = (action) => {
@@ -8,6 +9,10 @@ const TitleBar = () => {
   return (
     <nav className="titlebar">
       {/* Esta zona permite mover la ventana */}
+
+      <div className="titlebar-icon">
+        <img src={icon} className="app-icon" alt="App Icon" />
+      </div>
       <div className="titlebar-drag-region">
         <span>JMT Automotores</span>
       </div>

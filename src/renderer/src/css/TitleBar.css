@@ -10,24 +10,36 @@
   background-color: #2f3241; /* Ajusta a tu tema */
   color: #a9b1d6;
   user-select: none; /* Evita que se seleccione texto al arrastrar */
+  -webkit-app-region: drag;
+}
+.titlebar-icon {
+  display: flex;
+  align-items: center;
 }
 
+.app-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 32px;
+}
 /* ZONA DE ARRASTRE: Esto permite mover la ventana */
 .titlebar-drag-region {
   flex-grow: 1;
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+
   padding-left: 12px;
-  font-size: 12px;
+  font-size: 14px;
   /* Esta propiedad es la que hace la magia en Electron */
-  -webkit-app-region: drag;
 }
 
 /* CONTENEDOR DE BOTONES: Importante quitar el arrastre aquí */
 .titlebar-controls {
   display: flex;
   height: 100%;
+  justify-content: flex-end;
   /* Sin esto, los botones no recibirán clics */
   -webkit-app-region: no-drag;
 }

@@ -1,0 +1,261 @@
+.ver-autos-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px 20px;
+  background-color: #1e1e2e;
+  min-height: 100vh;
+  color: #fff;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Overlay oscuro cuando hay modal abierto */
+.ver-autos-container.modal-open::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  pointer-events: none;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.ver-autos-header {
+  margin-bottom: 30px;
+}
+
+.ver-autos-header h1 {
+  font-size: 28px;
+  margin: 0;
+  color: #74b1be;
+}
+
+.ver-autos-header p {
+  color: #999;
+  margin-top: 5px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #2f3241;
+  border-radius: 8px;
+  color: #999;
+}
+
+.empty-state p {
+  font-size: 18px;
+  margin: 0;
+}
+
+.empty-state small {
+  display: block;
+  margin-top: 10px;
+  color: #666;
+}
+
+.autos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auto-card {
+  background-color: #2f3241;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #444;
+  transition: all 0.3s ease;
+}
+
+.auto-card:hover {
+  border-color: #74b1be;
+  box-shadow: 0 4px 12px rgba(116, 177, 190, 0.1);
+}
+
+.auto-card-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auto-card-header:hover {
+  background-color: #323845;
+}
+
+.auto-info {
+  flex: 1;
+}
+
+.auto-info h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #74b1be;
+}
+
+.auto-meta {
+  display: flex;
+  gap: 15px;
+  margin-top: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.patente {
+  background-color: #1e1e2e;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 14px;
+  color: #74b1be;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-disponible {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.badge-vendido {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.badge-reparo {
+  background-color: rgba(249, 115, 22, 0.2);
+  color: #f97316;
+}
+
+.anio {
+  color: #999;
+  font-size: 13px;
+}
+
+.toggle-icon {
+  display: flex;
+  align-items: center;
+  color: #74b1be;
+}
+
+.auto-card-content {
+  padding: 20px;
+  border-top: 1px solid #444;
+  background-color: #232836;
+}
+
+.auto-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.auto-details p {
+  margin: 0;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+
+.auto-details strong {
+  color: #74b1be;
+}
+
+.auto-card-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btn-papeles {
+  background-color: #7c3aed;
+  color: white;
+}
+
+.btn-papeles:hover {
+  background-color: #6d28d9;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.btn-edit {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-delete {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #dc2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+@media (max-width: 768px) {
+  .ver-autos-header h1 {
+    font-size: 24px;
+  }
+
+  .auto-meta {
+    gap: 10px;
+  }
+
+  .auto-card-actions {
+    gap: 8px;
+  }
+
+  .btn-action {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}

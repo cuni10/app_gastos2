@@ -28,5 +28,37 @@ const schema = `
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
     );
+
+    CREATE TABLE IF NOT EXISTS autos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        marca TEXT NOT NULL,
+        modelo TEXT NOT NULL,
+        anio INTEGER NOT NULL,
+        patente TEXT UNIQUE NOT NULL,
+        color TEXT,
+        monto_compra REAL,
+        monto_venta REAL,
+        fecha_compra DATE,
+        fecha_venta DATE,
+        estado TEXT DEFAULT 'disponible',
+        descripcion TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS autos_papeles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        auto_id INTEGER NOT NULL,
+        tipo_papel TEXT NOT NULL,
+        descripcion TEXT,
+        fecha_obtencion DATE,
+        estado TEXT DEFAULT 'pendiente',
+        notas TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+        foreign KEY (auto_id) REFERENCES autos(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+    );
 `
 export default schema

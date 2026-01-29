@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/Logo.ico?asset'
 
 import dbManager from './db'
 
@@ -94,6 +94,142 @@ app.whenReady().then(() => {
       return { success: false, error: error.message }
     }
   })
+
+  // ==================== AUTOS HANDLERS ====================
+  ipcMain.handle('db:get-autos', () => {
+    return dbManager.getAutos()
+  })
+
+  ipcMain.handle('db:get-auto-by-id', (event, id) => {
+    return dbManager.getAutoById(id)
+  })
+
+  ipcMain.handle('db:insert-auto', (event, auto) => {
+    try {
+      const { marca, modelo, anio, patente, color, monto_compra, fecha_compra, descripcion } = auto
+      const id = dbManager.insertAuto(
+        marca,
+        modelo,
+        anio,
+        patente,
+        color,
+        monto_compra,
+        fecha_compra,
+        descripcion
+      )
+      return { success: true, id }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  ipcMain.handle('db:update-auto', (event, auto) => {
+    try {
+      const {
+        id,
+        marca,
+        modelo,
+        anio,
+        patente,
+        color,
+        monto_compra,
+        fecha_compra,
+        descripcion,
+        estado,
+        monto_venta,
+        fecha_venta
+      } = auto
+      dbManager.updateAuto(
+        id,
+        marca,
+        modelo,
+        anio,
+        patente,
+        color,
+        monto_compra,
+        fecha_compra,
+        descripcion,
+        estado,
+        monto_venta,
+        fecha_venta
+      )
+      return { success: true }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  ipcMain.handle('db:update-auto-estado', (event, data) => {
+    try {
+      const { id, estado, monto_venta, fecha_venta } = data
+      dbManager.updateAutoEstado(id, estado, monto_venta, fecha_venta)
+      return { success: true }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  ipcMain.handle('db:delete-auto', (event, id) => {
+    try {
+      dbManager.deleteAuto(id)
+      return { success: true }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  // ==================== PAPELES HANDLERS ====================
+  ipcMain.handle('db:get-papeles-auto', (event, auto_id) => {
+    return dbManager.getPapelesAuto(auto_id)
+  })
+
+  ipcMain.handle('db:insert-papel', (event, papel) => {
+    try {
+      const { auto_id, tipo_papel, descripcion, fecha_obtencion, notas } = papel
+      const id = dbManager.insertPapel(auto_id, tipo_papel, descripcion, fecha_obtencion, notas)
+      return { success: true, id }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  ipcMain.handle('db:update-papel', (event, papel) => {
+    try {
+      const { id, tipo_papel, descripcion, fecha_obtencion, estado, notas } = papel
+      dbManager.updatePapel(id, tipo_papel, descripcion, fecha_obtencion, estado, notas)
+      return { success: true }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  ipcMain.handle('db:update-papel-estado', (event, data) => {
+    try {
+      const { id, estado } = data
+      dbManager.updatePapelEstado(id, estado)
+      return { success: true }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  ipcMain.handle('db:delete-papel', (event, id) => {
+    try {
+      dbManager.deletePapel(id)
+      return { success: true }
+    } catch (error) {
+      console.error(error)
+      return { success: false, error: error.message }
+    }
+  })
+
   // Crea la ventana principal de la aplicación
   createWindow()
   // Optimiza los atajos de teclado en desarrollo

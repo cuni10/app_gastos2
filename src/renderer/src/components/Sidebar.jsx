@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LayoutDashboard, PlusCircle, History, Menu } from 'lucide-react'
+import { LayoutDashboard, PlusCircle, History, Menu, Car, Eye } from 'lucide-react'
 import '../css/Sidebar.css'
 import { Link } from 'react-router-dom'
 
@@ -34,6 +34,22 @@ const Sidebar = () => {
           <button className="nav-item">
             <History className="icon" size={24} />
             {!isCollapsed && <span>Historial</span>}
+          </button>
+        </Link>
+
+        <div className="sidebar-divider"></div>
+
+        <Link to="/agregar-auto" className="link">
+          <button className="nav-item">
+            <PlusCircle className="icon" size={24} />
+            {!isCollapsed && <span>Agregar auto</span>}
+          </button>
+        </Link>
+
+        <Link to="/autos" className="link">
+          <button className="nav-item">
+            <Eye className="icon" size={24} />
+            {!isCollapsed && <span>Ver autos</span>}
           </button>
         </Link>
       </nav>

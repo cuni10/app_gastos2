@@ -11,7 +11,7 @@
 }
 
 .gasto-form h2 {
-  color: #74b1be; /* Color acento solicitado */
+  color: var(--primary-accent); /* Color acento solicitado */
   font-size: 1.4rem;
   margin-bottom: 25px;
   text-align: center;

@@ -60,7 +60,7 @@ const AgregarGasto = () => {
         cuotas: 1
       })
       setShowSuccess(true)
-      setTimeout(() => setShowSuccess(false), 3000)
+      setTimeout(() => setShowSuccess(false), 6000)
     } catch (error) {
       console.error(error)
     } finally {
@@ -78,11 +78,10 @@ const AgregarGasto = () => {
           <p>Completa la información del nuevo movimiento</p>
         </div>
 
-        {/* Bloque Principal (Monto y Nombre) */}
         <div className="section-main">
           <div className="input-group-alt">
             <label>Monto Total</label>
-            <div className="input-with-icon accent">
+            <div className="input-with-icon">
               <DollarSign size={24} />
               <input
                 type="text"
@@ -110,7 +109,6 @@ const AgregarGasto = () => {
           </div>
         </div>
 
-        {/* Bloque de Detalles */}
         <div className="section-details">
           <div className="input-group-alt">
             <label>
@@ -128,13 +126,8 @@ const AgregarGasto = () => {
             <label>
               <List size={16} /> Categoría
             </label>
-            <select
-              name="categoria_id"
-              value={formData.categoria_id}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Seleccionar...</option>
+            <select name="categoria_id" value={formData.categoria_id} onChange={handleChange}>
+              <option value="">Sin Categoria</option>
               {categorias.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.nombre}

@@ -1,19 +1,20 @@
 :root {
-  --primary-accent: #74b1be;
-  --bg-dark: #2f3241;
-  --text-light: #ffffff;
-  --text-muted: #a0a0a0;
-  --card-bg: #3a3e50;
-}
+  /* Acentos de Marca */
+  --primary-accent: #c62828;
+  --secundary-accent: #fbc02d;
 
-:root {
-  --bg-dark: #1e1e26;
-  --bg-card: #2a2a35;
-  --accent: #74b1be;
-  --accent-soft: rgba(116, 177, 190, 0.1);
-  --text-main: #ffffff;
-  --text-muted: #a0a0b8;
-  --border: #3f3f4d;
+  /* Fondos Estructurales */
+  --bg-dark: #0f172a;
+  --card-bg: #1e293b;
+
+  /* Tipografía y Bordes */
+  --text-light: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-subtle: #334155;
+
+  --success: #2ecc71;
+  --success-text: white;
+  --error: #e74c3c;
 }
 
 body {

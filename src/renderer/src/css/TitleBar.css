@@ -7,8 +7,8 @@
   width: 100%;
   justify-content: space-between;
   height: 32px; /* Altura estándar de barra de título */
-  background-color: #2f3241; /* Ajusta a tu tema */
-  color: #a9b1d6;
+  background-color: var(--bg-dark); /* Ajusta a tu tema */
+  color: var(--text-light);
   user-select: none; /* Evita que se seleccione texto al arrastrar */
   -webkit-app-region: drag;
 }
@@ -29,7 +29,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding-left: 12px;
   font-size: 14px;
   /* Esta propiedad es la que hace la magia en Electron */
@@ -53,13 +52,13 @@
   height: 100%;
   border: none;
   background: transparent;
-  color: #74b1be;
+  color: var(--text-light);
   transition: background-color 0.2s;
   cursor: default;
 }
 
 .control-button:hover {
-  background-color: #32344a;
+  background-color: #1e293b;
 }
 
 /* Estilo especial para el botón de cerrar */

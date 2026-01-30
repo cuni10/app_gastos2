@@ -15,6 +15,9 @@
   --success: #2ecc71;
   --success-text: white;
   --error: #e74c3c;
+
+  --window-button-exit: #f44336;
+  --window-button-hover: #1e293b;
 }
 
 body {

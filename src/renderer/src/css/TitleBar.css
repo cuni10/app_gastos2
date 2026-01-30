@@ -58,12 +58,12 @@
 }
 
 .control-button:hover {
-  background-color: #1e293b;
+  background-color: var(--window-button-hover);
 }
 
 /* Estilo especial para el botón de cerrar */
 .control-button.close:hover {
-  background-color: #f44336;
+  background-color: var(--window-button-exit);
 }
 
 /* Estilo de los iconos (puedes usar SVGs o texto) */

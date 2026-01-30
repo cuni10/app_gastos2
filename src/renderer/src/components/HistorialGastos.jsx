@@ -23,7 +23,7 @@ const HistorialGastos = () => {
           <div key={gasto.id} className="expense-card">
             <div className="expense-icon-wrapper">
               <div className="category-icon">
-                <Tag size={20} color="#74b1be" />
+                <Tag size={20} />
               </div>
             </div>
 

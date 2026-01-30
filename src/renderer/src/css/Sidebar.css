@@ -4,7 +4,6 @@
   background-color: var(--bg-dark);
   color: var(--text-light);
   transition: width 0.3s ease;
-  font-family: sans-serif;
   box-sizing: border-box;
 }
 

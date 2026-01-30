@@ -27,3 +27,9 @@ Thumbs.db
 
 # Temporales de Electron-Builder
 release/
+
+# Better-SQLite3 archivos de base de datos
+src/db/*.db
+src/db/*.db-wal
+src/db/*.db-shm
+src/db/*.db-journal

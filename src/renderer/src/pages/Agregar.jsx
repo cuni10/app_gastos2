@@ -1,9 +1,9 @@
-import AgregarGasto2 from '../components/AgregarGasto2'
+import AgregarGasto from '../components/AgregarGasto'
 
 function Agregar() {
   return (
     <>
-      <AgregarGasto2 />
+      <AgregarGasto />
     </>
   )
 }

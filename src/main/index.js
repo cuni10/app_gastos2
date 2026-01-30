@@ -20,8 +20,6 @@ function createWindow() {
       sandbox: false
     }
   })
-
-  mainWindow.webContents.openDevTools()
   // Muestra la ventana cuando esté lista para evitar pantalla blanca
   mainWindow.on('ready-to-show', () => {
     mainWindow.setTitle('JMT Automotores')
@@ -45,7 +43,6 @@ function createWindow() {
 app.whenReady().then(() => {
   // Establece el ID del modelo de usuario para Windows
   electronApp.setAppUserModelId('com.electron')
-
   //Para resetear la base de datos en desarrollo
   // dbManager.resetDB()
 

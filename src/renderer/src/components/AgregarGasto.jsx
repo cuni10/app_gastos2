@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Save, Calendar, DollarSign, Tag, Repeat } from 'lucide-react'
+import { Save, DollarSign, Tag, FileText, List } from 'lucide-react'
 import '../css/AgregarGasto.css'
 
 const AgregarGasto = () => {
@@ -10,9 +10,11 @@ const AgregarGasto = () => {
   const [formData, setFormData] = useState({
     nombre: '',
     monto: '',
+    nota: '',
+    categoria_id: '',
     mensual: false,
-    fecha_cobro: '',
-    categoria_id: ''
+    dia_cobro: '',
+    cuotas: 1
   })
 
   useEffect(() => {
@@ -25,46 +27,40 @@ const AgregarGasto = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
-
     setFormData((prev) => {
       let newValue = type === 'checkbox' ? checked : value
-
       if (name === 'monto') {
         const rawValue = value.replace(/\D/g, '')
         newValue = rawValue === '' ? '' : new Intl.NumberFormat('de-DE').format(parseInt(rawValue))
       }
-
-      const newData = { ...prev, [name]: newValue }
-
-      // Lógica de fecha_cobro
-      if (name === 'mensual') {
-        newData.fecha_cobro = checked ? new Date().toISOString().split('T')[0] : ''
-      }
-
-      return newData
+      return { ...prev, [name]: newValue }
     })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    console.log(formData)
-
     const formDataSql = {
       ...formData,
       mensual: formData.mensual ? 1 : 0,
       categoria_id: formData.categoria_id ? Number(formData.categoria_id) : null,
-      monto: Number(formData.monto.toString().replace(/\./g, ''))
+      monto: Number(formData.monto.toString().replace(/\./g, '')),
+      dia_cobro: formData.dia_cobro ? Number(formData.dia_cobro) : null,
+      cuotas: Number(formData.cuotas)
     }
-
-    console.log('Datos para SQL:', formDataSql)
     try {
       await window.api.insertGastoConHistorial(formDataSql)
-      setFormData({ nombre: '', monto: '', mensual: false, fecha_cobro: '', categoria_id: '' })
-      setLoading(false)
-
+      setFormData({
+        nombre: '',
+        monto: '',
+        nota: '',
+        categoria_id: '',
+        mensual: false,
+        dia_cobro: '',
+        cuotas: 1
+      })
       setShowSuccess(true)
-      setTimeout(() => setShowSuccess(false), 3000) // Se quita en 3 segundos
+      setTimeout(() => setShowSuccess(false), 6000)
     } catch (error) {
       console.error(error)
     } finally {
@@ -73,60 +69,65 @@ const AgregarGasto = () => {
   }
 
   return (
-    <div className="card-container dark">
-      {showSuccess && (
-        <div
-          style={{
-            backgroundColor: '#2ecc71',
-            color: 'white',
-            padding: '10px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center'
-          }}
-        >
-          ¡Registro guardado con éxito!
-        </div>
-      )}
-      <form className="gasto-form" onSubmit={handleSubmit}>
-        <h2>Nuevo Registro</h2>
+    <div className="container-alt">
+      {showSuccess && <div className="toast-success">¡Guardado con éxito!</div>}
 
-        <div className="input-group">
-          <label>
-            <Tag size={18} /> Nombre
-          </label>
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-            autoComplete="off"
-            placeholder="Ej: Internet"
-            required
-          />
+      <form className="form-alt" onSubmit={handleSubmit}>
+        <div className="form-header">
+          <h2>Registrar Gasto</h2>
+          <p>Completa la información del nuevo movimiento</p>
         </div>
 
-        <div className="row">
-          <div className="input-group">
+        <div className="section-main">
+          <div className="input-group-alt">
+            <label>Monto Total</label>
+            <div className="input-with-icon">
+              <DollarSign size={24} />
+              <input
+                type="text"
+                name="monto"
+                value={formData.monto}
+                onChange={handleChange}
+                placeholder="0"
+                required
+              />
+            </div>
+          </div>
+          <div className="input-group-alt">
+            <label>¿En qué gastaste?</label>
+            <div className="input-with-icon">
+              <Tag size={20} />
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                placeholder="Nombre del gasto"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="section-details">
+          <div className="input-group-alt">
             <label>
-              <DollarSign size={18} /> Monto
+              <FileText size={16} /> Nota Opcional
             </label>
             <input
               type="text"
-              name="monto"
-              value={formData.monto}
+              name="nota"
+              value={formData.nota}
               onChange={handleChange}
-              placeholder="0.00"
-              autoComplete="off"
-              step="0.01"
-              required
+              placeholder="Añade un detalle..."
             />
           </div>
-
-          <div className="input-group">
-            <label>Categoría</label>
+          <div className="input-group-alt">
+            <label>
+              <List size={16} /> Categoría
+            </label>
             <select name="categoria_id" value={formData.categoria_id} onChange={handleChange}>
-              <option value="">Seleccionar...</option>
+              <option value="">Sin Categoria</option>
               {categorias.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.nombre}
@@ -136,38 +137,51 @@ const AgregarGasto = () => {
           </div>
         </div>
 
-        <div className="checkbox-section">
-          <div className="checkbox-group">
+        {/* Bloque de Configuración */}
+        <div className="section-config">
+          <label className={`toggle-control ${formData.mensual ? 'is-active' : ''}`}>
             <input
               type="checkbox"
-              id="mensual"
               name="mensual"
               checked={formData.mensual}
               onChange={handleChange}
             />
-            <label htmlFor="es_mensual">
-              <Repeat size={18} /> ¿Es un gasto mensual?
-            </label>
-          </div>
+            <div className="toggle-switch"></div>
+            <span>Gasto Mensual</span>
+          </label>
 
-          {/* Fecha de cobro debajo del checkbox */}
-          <div className={`input-group ${!formData.mensual ? 'disabled' : ''}`}>
-            <label>
-              <Calendar size={18} /> Fecha de Cobro
-            </label>
-            <input
-              type="date"
-              name="fecha_cobro"
-              value={formData.fecha_cobro}
-              onChange={handleChange}
-              disabled={!formData.mensual}
-              required={formData.mensual}
-            />
+          <div className="row-config">
+            <div className="input-group-alt">
+              <label>Día</label>
+              <input
+                type="number"
+                name="dia_cobro"
+                value={formData.dia_cobro}
+                onChange={handleChange}
+                placeholder="1-31"
+              />
+            </div>
+            <div className="input-group-alt">
+              <label>Cuotas</label>
+              <input
+                type="number"
+                name="cuotas"
+                value={formData.cuotas}
+                onChange={handleChange}
+                min="1"
+              />
+            </div>
           </div>
         </div>
 
-        <button type="submit" className="btn-save" disabled={loading}>
-          <Save size={18} /> {loading ? 'Procesando...' : 'Guardar'}
+        <button type="submit" className="btn-gradient" disabled={loading}>
+          {loading ? (
+            'Procesando...'
+          ) : (
+            <>
+              <Save size={20} /> Guardar Registro
+            </>
+          )}
         </button>
       </form>
     </div>

@@ -1,10 +1,10 @@
 {
   "name": "app_gastos2",
   "version": "1.0.0",
-  "description": "An Electron application with React",
+  "description": "Aplicacion electron, para ayudar a gestionar empresa de automotores",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "github.com/cuni10",
+  "homepage": "https://github.com/cuni10/app_gastos2",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",

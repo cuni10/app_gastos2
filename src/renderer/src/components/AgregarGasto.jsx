@@ -178,6 +178,7 @@ const AgregarGasto = () => {
                   placeholder="31"
                   min={1}
                   max={31}
+                  required
                 />
               </div>
               <div className="input-group-alt">
@@ -189,6 +190,7 @@ const AgregarGasto = () => {
                   onChange={handleChange}
                   placeholder="6"
                   min="2"
+                  required
                 />
               </div>
             </div>

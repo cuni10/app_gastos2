@@ -46,7 +46,7 @@ app.whenReady().then(() => {
   // Establece el ID del modelo de usuario para Windows
   electronApp.setAppUserModelId('com.electron')
   //Para resetear la base de datos en desarrollo
-  // dbManager.resetDB()
+  //dbManager.resetDB()
 
   // IPC para controles de ventana
   ipcMain.on('window-control', (event, action) => {

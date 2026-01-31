@@ -38,17 +38,22 @@ const HistorialGastos = () => {
                   <Calendar size={14} />
                   <span>Pago: {gasto.fechaPago}</span>
                 </div>
+                {gasto.categoria ? (
+                  <div className="info-item">
+                    <Tag size={14} />
+                    <span>{gasto.categoria}</span>
+                  </div>
+                ) : (
+                  ''
+                )}
 
-                <div className="info-item">
-                  <Tag size={14} />
-                  <span>{gasto.categoria}</span>
-                </div>
-
-                {gasto.esMensual && (
+                {gasto.esMensual ? (
                   <div className="info-item monthly-badge">
                     <Repeat size={14} />
                     <span>Mensual (Día {gasto.diaPagoMensual})</span>
                   </div>
+                ) : (
+                  ''
                 )}
               </div>
             </div>

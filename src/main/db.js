@@ -1,10 +1,17 @@
 import path from 'path'
+import fs from 'fs'
 import dataBase from 'better-sqlite3'
 import { app } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import schema from './schema'
 
 const dirDB = is.dev ? path.join(app.getAppPath(), 'src', 'db') : path.dirname(app.getPath('exe'))
+
+if (!fs.existsSync(dirDB)) {
+  fs.mkdirSync(dirDB, { recursive: true })
+  console.log('Carpeta creada en: ', dirDB)
+}
+
 const dbPath = path.join(dirDB, 'gastos.db')
 const db = new dataBase(dbPath)
 

@@ -16,9 +16,9 @@ const HistorialGastos = () => {
     fetchHistorial()
   }, [])
   return (
-    <div className="history-container">
-      <h2 className="history-title">Historial de Gastos</h2>
-      <div className="expense-list">
+    <div className="container-history">
+      <div className="card-history">
+        <h2 className="history-title">Historial de Gastos</h2>
         {historial.map((gasto) => (
           <div key={gasto.id} className="expense-card">
             <div className="expense-icon-wrapper">

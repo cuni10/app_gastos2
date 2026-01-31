@@ -13,7 +13,7 @@ const AgregarGasto = () => {
     nota: '',
     categoria_id: '',
     mensual: false,
-    dia_cobro: '',
+    fecha_cobro: '',
     cuotas: ''
   })
 
@@ -34,7 +34,7 @@ const AgregarGasto = () => {
         newValue = rawValue === '' ? '' : new Intl.NumberFormat('de-DE').format(parseInt(rawValue))
       }
       // Limit dia_cobro between 1 and 31
-      if (name === 'dia_cobro') {
+      if (name === 'fecha_cobro') {
         newValue = value < 1 ? '1' : value > 31 ? '31' : value
       }
 
@@ -54,7 +54,7 @@ const AgregarGasto = () => {
       mensual: formData.mensual ? 1 : 0,
       categoria_id: formData.categoria_id ? Number(formData.categoria_id) : null,
       monto: Number(formData.monto.toString().replace(/\./g, '')),
-      dia_cobro: formData.dia_cobro ? Number(formData.dia_cobro) : null,
+      fecha_cobro: formData.fecha_cobro ? Number(formData.fecha_cobro) : null,
       cuotas: Number(formData.cuotas)
     }
     try {
@@ -65,7 +65,7 @@ const AgregarGasto = () => {
         nota: '',
         categoria_id: '',
         mensual: false,
-        dia_cobro: '',
+        fecha_cobro: '',
         cuotas: ''
       })
       setShowSuccess(true)
@@ -164,8 +164,8 @@ const AgregarGasto = () => {
                 <label>Día</label>
                 <input
                   type="number"
-                  name="dia_cobro"
-                  value={formData.dia_cobro}
+                  name="fecha_cobro"
+                  value={formData.fecha_cobro}
                   onChange={handleChange}
                   placeholder="31"
                   min={1}

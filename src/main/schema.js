@@ -10,6 +10,8 @@ const schema = `
         monto REAL NOT NULL,
         mensual BOOLEAN NOT NULL,
         fecha_cobro INTEGER,
+        nota TEXT,
+        cuotas INTEGER,
         categoria_id INTEGER,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
@@ -22,7 +24,6 @@ const schema = `
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         gasto_id INTEGER NOT NULL,
         fecha_pago DATE NOT NULL,
-        monto_pagado REAL NOT NULL,
 
         foreign KEY (gasto_id) REFERENCES gastos(id)
         ON UPDATE RESTRICT

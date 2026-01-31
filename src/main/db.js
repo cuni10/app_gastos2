@@ -25,11 +25,14 @@ const dbManager = {
     SELECT 
       h.id,
       g.nombre,
-      h.monto_pagado as monto,
+      g.monto,
+      g.nota,
       h.fecha_pago as fechaPago,
       c.nombre as categoria,
       g.mensual as esMensual,
+      g.cuotas as cuotas,
       g.fecha_cobro as diaPagoMensual
+      
     FROM historial_gastos h
     JOIN gastos g ON h.gasto_id = g.id
     LEFT JOIN categorias c ON g.categoria_id = c.id
@@ -44,39 +47,37 @@ const dbManager = {
   getCategorias: () => {
     return db.prepare('SELECT * FROM categorias').all()
   },
-  insertGasto: (nombre, monto, mensual, fecha, categoria_id) => {
-    db.prepare(
-      'INSERT INTO gastos (nombre, monto, mensual, fecha_cobro, categoria_id) VALUES (?, ?, ?, ?, ?)'
-    ).run(nombre, monto, mensual, fecha, categoria_id)
-  },
   insertCategoria: (nombre, descripcion) => {
     db.prepare('INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)').run(
       nombre,
       descripcion
     )
   },
-  insertGastoConHistorial: (nombre, monto, mensual, fecha, categoria_id) => {
+  insertGastoConHistorial: (nombre, monto, mensual, fecha, nota, cuotas, categoria_id) => {
     const crearGasto = db.transaction((gastoData) => {
       const info = db
         .prepare(
-          'INSERT INTO gastos (nombre, monto, mensual, fecha_cobro, categoria_id) VALUES (?, ?, ?, ?, ?)'
+          'INSERT INTO gastos (nombre, monto, mensual, fecha_cobro, nota, cuotas, categoria_id) VALUES (?, ?, ?, ?, ?, ?, ?)'
         )
         .run(
           gastoData.nombre,
           gastoData.monto,
           gastoData.mensual,
           gastoData.fecha,
+          gastoData.nota,
+          gastoData.cuotas,
           gastoData.categoria_id
         )
 
       const gastoId = info.lastInsertRowid
 
-      db.prepare(
-        'INSERT INTO historial_gastos (gasto_id, fecha_pago, monto_pagado) VALUES (?, ?, ?)'
-      ).run(gastoId, new Date().toISOString().split('T')[0], gastoData.monto)
+      db.prepare('INSERT INTO historial_gastos (gasto_id, fecha_pago) VALUES (?, ?)').run(
+        gastoId,
+        new Date().toISOString().split('T')[0]
+      )
     })
 
-    return crearGasto({ nombre, monto, mensual, fecha, categoria_id })
+    return crearGasto({ nombre, monto, mensual, fecha, nota, cuotas, categoria_id })
   }
 }
 

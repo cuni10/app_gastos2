@@ -65,10 +65,6 @@ app.whenReady().then(() => {
   ipcMain.handle('db:get-gastos', () => {
     return dbManager.getGastos()
   })
-  ipcMain.handle('db:insert-gasto', (event, gasto) => {
-    const { nombre, monto, mensual, fecha_cobro, categoria_id } = gasto
-    dbManager.insertGasto(nombre, monto, mensual, fecha_cobro, categoria_id)
-  })
   ipcMain.handle('db:get-categorias', () => {
     return dbManager.getCategorias()
   })
@@ -79,12 +75,14 @@ app.whenReady().then(() => {
 
   ipcMain.handle('db:insert-gasto-con-historial', (event, gasto) => {
     try {
-      const { nombre, monto, mensual, fecha_cobro, categoria_id } = gasto
+      const { nombre, monto, mensual, fecha_cobro, nota, cuotas, categoria_id } = gasto
       const id = dbManager.insertGastoConHistorial(
         nombre,
         monto,
         mensual,
         fecha_cobro,
+        nota,
+        cuotas,
         categoria_id
       )
       return { success: true, id }

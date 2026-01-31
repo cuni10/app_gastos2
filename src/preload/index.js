@@ -1,14 +1,12 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-// Custom APIs for renderer
+// Custom APIs for base de datos
 const api = {
   getHistorial: () => ipcRenderer.invoke('db:get-historial'),
-
   getGastos: () => ipcRenderer.invoke('db:get-gastos'),
-
-  insertGasto: (gasto) => ipcRenderer.invoke('db:insert-gasto', gasto),
   getCategorias: () => ipcRenderer.invoke('db:get-categorias'),
+
   insertCategoria: (categoria) => ipcRenderer.invoke('db:insert-categoria', categoria),
   insertGastoConHistorial: (gasto) => ipcRenderer.invoke('db:insert-gasto-con-historial', gasto)
 }

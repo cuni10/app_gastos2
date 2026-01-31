@@ -9,7 +9,9 @@ function createWindow() {
   // Parametros de la ventana principal
   const mainWindow = new BrowserWindow({
     width: 960,
-    height: 640,
+    height: 800,
+    minHeight: 800,
+    minWidth: 900,
     title: 'JMT Automotores',
     show: false,
     autoHideMenuBar: true,

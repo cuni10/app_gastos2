@@ -35,12 +35,20 @@ const AgregarGasto = () => {
       }
       // Limit dia_cobro between 1 and 31
       if (name === 'fecha_cobro') {
-        newValue = value < 1 ? '1' : value > 31 ? '31' : value
+        if (value === '' || value === 0) {
+          newValue = value
+        } else {
+          newValue = value < 1 ? '1' : value > 31 ? '31' : value
+        }
       }
 
       // limit min
-      if (name === 'cuotas' && value < 2) {
-        newValue = '2'
+      if (name === 'cuotas') {
+        if (value === '' || value === '0') {
+          newValue = value
+        } else if (parseInt(value, 10) < 2) {
+          newValue = '2'
+        }
       }
       return { ...prev, [name]: newValue }
     })

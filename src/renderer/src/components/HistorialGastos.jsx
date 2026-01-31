@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Calendar, Tag, Repeat, ChevronRight } from 'lucide-react'
+import { Calendar, Tag, Repeat, ChevronRight, FileText } from 'lucide-react'
 import '../css/HistorialGastos.css'
 
 const HistorialGastos = () => {
@@ -30,13 +30,17 @@ const HistorialGastos = () => {
             <div className="expense-details">
               <div className="expense-header">
                 <span className="expense-name">{gasto.nombre}</span>
-                <span className="expense-amount">${gasto.monto.toLocaleString()}</span>
+              </div>
+
+              <div className={`expense-note ${gasto.nota ? 'is-active' : ''}`}>
+                <FileText size={16} />
+                <span>{gasto.nota}</span>
               </div>
 
               <div className="expense-info-grid">
                 <div className="info-item">
                   <Calendar size={14} />
-                  <span>Pago: {gasto.fechaPago}</span>
+                  <span>{gasto.fechaPago}</span>
                 </div>
                 {gasto.categoria ? (
                   <div className="info-item">
@@ -57,7 +61,9 @@ const HistorialGastos = () => {
                 )}
               </div>
             </div>
-
+            <div className="expense-end">
+              <span className="expense-amount">${gasto.monto.toLocaleString()}</span>
+            </div>
             <div className="expense-action">
               <ChevronRight size={20} className="arrow-icon" />
             </div>

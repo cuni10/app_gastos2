@@ -61,7 +61,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
 }
 
 .expense-name {
@@ -71,14 +70,31 @@
 
 .expense-amount {
   color: var(--text-light);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.9rem;
+}
+.expense-note {
+  display: flex;
+  visibility: hidden;
+}
+.is-active {
+  margin-bottom: 0.5rem;
+  color: var(--text-light);
+  font-size: 1.1rem;
+  align-items: center;
+  display: flex;
+  gap: 0.4rem;
+  visibility: visible;
 }
 
 .expense-info-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 5px;
+  max-width: 400px;
 }
 
 .info-item {

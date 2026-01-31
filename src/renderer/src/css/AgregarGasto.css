@@ -1,9 +1,9 @@
 .container-alt {
   background-color: var(--bg-dark);
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
 
 .form-alt {

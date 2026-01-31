@@ -4,7 +4,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
 .form-alt {
@@ -17,6 +16,7 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
+  gap: 19px;
 }
 
 .form-header h2 {
@@ -65,7 +65,7 @@
 .section-details {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  gap: 15px;
+  gap: 50px;
 }
 
 .input-group-alt label {
@@ -89,11 +89,15 @@
 }
 
 /* Configuración (Mensual/Cuotas) */
-.section-config {
-  background: var(--accent-soft);
+.section-mensual {
+  background: var();
   padding: 20px;
   border-radius: 15px;
-  border: 1px dashed var(--accent);
+  border: 1px dashed var(--border-subtle);
+}
+.section-mensual span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .toggle-control {
@@ -101,7 +105,10 @@
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  margin-bottom: 15px;
+}
+
+.toggle-control input {
+  display: none;
 }
 
 .toggle-switch {
@@ -110,6 +117,8 @@
   border-radius: 20px;
   position: relative;
   transition: 0.3s;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
 }
 
 .toggle-switch::after {
@@ -125,15 +134,18 @@
 }
 
 .is-active .toggle-switch {
-  background: var(--accent);
+  background: var(--primary-accent);
 }
 .is-active .toggle-switch::after {
   left: 22px;
 }
 
-.row-config {
-  display: flex;
-  gap: 15px;
+.row-mensual {
+  margin-top: 15px;
+  width: 95%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
 }
 
 /* Botón principal */

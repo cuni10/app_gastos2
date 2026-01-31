@@ -14,7 +14,7 @@ const AgregarGasto = () => {
     categoria_id: '',
     mensual: false,
     dia_cobro: '',
-    cuotas: 1
+    cuotas: ''
   })
 
   useEffect(() => {
@@ -32,6 +32,15 @@ const AgregarGasto = () => {
       if (name === 'monto') {
         const rawValue = value.replace(/\D/g, '')
         newValue = rawValue === '' ? '' : new Intl.NumberFormat('de-DE').format(parseInt(rawValue))
+      }
+      // Limit dia_cobro between 1 and 31
+      if (name === 'dia_cobro') {
+        newValue = value < 1 ? '1' : value > 31 ? '31' : value
+      }
+
+      // limit min
+      if (name === 'cuotas' && value < 2) {
+        newValue = '2'
       }
       return { ...prev, [name]: newValue }
     })
@@ -57,7 +66,7 @@ const AgregarGasto = () => {
         categoria_id: '',
         mensual: false,
         dia_cobro: '',
-        cuotas: 1
+        cuotas: ''
       })
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 6000)
@@ -112,7 +121,7 @@ const AgregarGasto = () => {
         <div className="section-details">
           <div className="input-group-alt">
             <label>
-              <FileText size={16} /> Nota Opcional
+              <FileText size={16} /> Nota (Opcional)
             </label>
             <input
               type="text"
@@ -124,7 +133,7 @@ const AgregarGasto = () => {
           </div>
           <div className="input-group-alt">
             <label>
-              <List size={16} /> Categoría
+              <List size={16} /> Categoría (Opcional)
             </label>
             <select name="categoria_id" value={formData.categoria_id} onChange={handleChange}>
               <option value="">Sin Categoria</option>
@@ -137,8 +146,7 @@ const AgregarGasto = () => {
           </div>
         </div>
 
-        {/* Bloque de Configuración */}
-        <div className="section-config">
+        <div className="section-mensual">
           <label className={`toggle-control ${formData.mensual ? 'is-active' : ''}`}>
             <input
               type="checkbox"
@@ -150,28 +158,33 @@ const AgregarGasto = () => {
             <span>Gasto Mensual</span>
           </label>
 
-          <div className="row-config">
-            <div className="input-group-alt">
-              <label>Día</label>
-              <input
-                type="number"
-                name="dia_cobro"
-                value={formData.dia_cobro}
-                onChange={handleChange}
-                placeholder="1-31"
-              />
+          {formData.mensual && (
+            <div className="row-mensual">
+              <div className="input-group-alt">
+                <label>Día</label>
+                <input
+                  type="number"
+                  name="dia_cobro"
+                  value={formData.dia_cobro}
+                  onChange={handleChange}
+                  placeholder="31"
+                  min={1}
+                  max={31}
+                />
+              </div>
+              <div className="input-group-alt">
+                <label>Cuotas</label>
+                <input
+                  type="number"
+                  name="cuotas"
+                  value={formData.cuotas}
+                  onChange={handleChange}
+                  placeholder="6"
+                  min="2"
+                />
+              </div>
             </div>
-            <div className="input-group-alt">
-              <label>Cuotas</label>
-              <input
-                type="number"
-                name="cuotas"
-                value={formData.cuotas}
-                onChange={handleChange}
-                min="1"
-              />
-            </div>
-          </div>
+          )}
         </div>
 
         <button type="submit" className="btn-gradient" disabled={loading}>

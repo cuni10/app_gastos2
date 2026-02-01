@@ -83,7 +83,7 @@ const HistorialGastos = () => {
                   </div>
                 </div>
                 <div className="expense-end">
-                  <span className="expense-amount">${gasto.monto.toLocaleString()}</span>
+                  <span className="expense-amount">${gasto.monto.toLocaleString('es-AR')}</span>
                 </div>
                 <div className="expense-action">
                   <ChevronRight size={20} className="arrow-icon" />

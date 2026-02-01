@@ -48,6 +48,16 @@ const dbManager = {
       )
       .all()
   },
+  gethistorialMes: () => {
+    return db.prepare(
+      `
+    SELECT * FROM historial_gastos 
+    WHERE strftime('%m', fechaPago) = ? 
+    AND strftime('%Y', fechaPago) = ?
+    ORDER BY fechaPago DESC;
+  `
+    )
+  },
   getGastos: () => {
     return db.prepare('SELECT * FROM gastos').all()
   },

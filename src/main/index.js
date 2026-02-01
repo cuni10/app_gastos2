@@ -64,6 +64,18 @@ app.whenReady().then(() => {
   ipcMain.handle('db:get-historial', () => {
     return dbManager.getHistorial()
   })
+  ipcMain.handle('db:get-historial-mes', async (event, { mes, anio }) => {
+    try {
+      const resultados = dbManager.gethistorialMes(mes, anio)
+      return resultados
+    } catch (error) {
+      console.error('Error en query de historial mensual', error)
+      return []
+    }
+  })
+  ipcMain.handle('db:get-historial-seis-meses', () => {
+    return dbManager.getHistorialSeisMeses()
+  })
   ipcMain.handle('db:get-gastos', () => {
     return dbManager.getGastos()
   })

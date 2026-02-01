@@ -48,15 +48,56 @@ const dbManager = {
       )
       .all()
   },
-  gethistorialMes: () => {
-    return db.prepare(
-      `
-    SELECT * FROM historial_gastos 
-    WHERE strftime('%m', fechaPago) = ? 
-    AND strftime('%Y', fechaPago) = ?
-    ORDER BY fechaPago DESC;
+  gethistorialMes: (mes, anio) => {
+    return db
+      .prepare(
+        `
+    SELECT 
+        h.id,
+        g.nombre,
+        g.monto,
+        g.nota,
+        h.fecha_pago as fechaPago,
+        c.nombre as categoria,
+        g.mensual as esMensual
+      FROM historial_gastos h
+      JOIN gastos g ON h.gasto_id = g.id
+      LEFT JOIN categorias c ON g.categoria_id = c.id
+      WHERE strftime('%m', h.fecha_pago) = ? 
+      AND strftime('%Y', h.fecha_pago) = ?
+      ORDER BY datetime(h.fecha_pago) DESC, h.id DESC;
   `
-    )
+      )
+      .all(mes, anio)
+  },
+  getHistorialSeisMeses: () => {
+    return db
+      .prepare(
+        `
+    SELECT
+      CASE strftime('%m', h.fecha_pago)
+        WHEN '01' THEN 'Enero' 
+        WHEN '02' THEN 'Febrero' 
+        WHEN '03' THEN 'Marzo'
+        WHEN '04' THEN 'Abril' 
+        WHEN '05' THEN 'Mayo' 
+        WHEN '06' THEN 'Junio'
+        WHEN '07' THEN 'Julio' 
+        WHEN '08' THEN 'Agosto' 
+        WHEN '09' THEN 'Septiembre'
+        WHEN '10' THEN 'Octubre' 
+        WHEN '11' THEN 'Noviembre' 
+        WHEN '12' THEN 'Diciembre'
+      END as mes,
+      SUM(g.monto) as total
+    FROM historial_gastos h
+    JOIN gastos g ON h.gasto_id = g.id
+    WHERE h.fecha_pago >= date('now', 'start of month', '-5 months')
+    GROUP BY strftime('%m', h.fecha_pago)
+    ORDER BY h.fecha_pago ASC;
+  `
+      )
+      .all()
   },
   getGastos: () => {
     return db.prepare('SELECT * FROM gastos').all()

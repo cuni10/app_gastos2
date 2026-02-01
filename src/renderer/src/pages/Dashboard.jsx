@@ -17,24 +17,24 @@ import icon from '../../../../resources/logo.ico'
 const Dashboard = () => {
   const [historial, setHistorial] = useState([])
   const [currentTime, setCurrentTime] = useState(new Date())
+  const [historialSeisMeses, setHistorialSeisMeses] = useState([])
   const navigate = useNavigate()
-
-  // Datos de ejemplo para el gráfico (Esto debería venir de tu API)
-  const dataGrafico = [
-    { mes: 'Ene', total: 45000 },
-    { mes: 'Feb', total: 52000 },
-    { mes: 'Mar', total: 38000 },
-    { mes: 'Abr', total: 65000 }
-  ]
 
   const handleNavigation = (path) => {
     navigate(path)
   }
 
   useEffect(() => {
+    const filtros = {
+      mes: (new Date().getMonth() + 1).toString().padStart(2, '0'),
+      anio: new Date().getFullYear().toString()
+    }
     const fetchData = async () => {
-      const datos = await window.api.getHistorial()
-      setHistorial(datos.slice(0, 5)) // Solo los últimos 5
+      const datos = await window.api.getHistorialMes(filtros)
+      const datosSeisMeses = await window.api.getHistorialSeisMeses()
+      setHistorialSeisMeses(datosSeisMeses)
+      setHistorial(datos.slice(-5)) // Solo los últimos 5
+      console.log(datosSeisMeses)
     }
     fetchData()
 
@@ -42,6 +42,8 @@ const Dashboard = () => {
     return () => clearInterval(timer)
   }, [])
 
+  const nombreMes = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date())
+  const mesActual = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)
   const totalMesActual = historial.reduce((acc, curr) => acc + curr.monto, 0)
 
   return (
@@ -82,7 +84,7 @@ const Dashboard = () => {
             <Wallet size={24} />
           </div>
           <div className="summary-content">
-            <span className="label">Gasto Mensual Total</span>
+            <span className="label">Gasto total en {mesActual}</span>
             <h2 className="amount">${totalMesActual.toLocaleString('es-AR')}</h2>
             <div className="trend positive">
               <ArrowDownRight size={16} />
@@ -96,7 +98,10 @@ const Dashboard = () => {
           <h3>Flujo de Gastos Semestral</h3>
           <div className="chart-wrapper">
             <ResponsiveContainer width="100%" height={250}>
-              <AreaChart data={dataGrafico}>
+              <AreaChart
+                margin={{ top: 10, right: 20, left: 60, bottom: 0 }}
+                data={historialSeisMeses}
+              >
                 <defs>
                   <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--primary-accent)" stopOpacity={0.3} />
@@ -109,13 +114,25 @@ const Dashboard = () => {
                   vertical={false}
                 />
                 <XAxis dataKey="mes" stroke="var(--text-muted)" />
-                <YAxis stroke="var(--text-muted)" />
+                <YAxis
+                  tickFormatter={(value) =>
+                    `$${value.toLocaleString('es-AR', { minimumFractionDigits: 0 })}`
+                  }
+                  stroke="var(--text-muted)"
+                />
                 <Tooltip
+                  formatter={(value) => [`$${value.toLocaleString('es-AR')}`]}
                   contentStyle={{
                     backgroundColor: 'var(--card-bg)',
-                    border: '1px solid var(--border-subtle)'
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '10px'
                   }}
                   itemStyle={{ color: 'var(--text-light)' }}
+                  labelStyle={{
+                    color: 'var(--text-light)',
+                    fontWeight: 'bold',
+                    marginBottom: '5px'
+                  }}
                 />
                 <Area
                   type="monotone"
@@ -132,7 +149,7 @@ const Dashboard = () => {
         {/* MINI HISTORIAL */}
         <div className="dash-card history-mini">
           <div className="card-header-flex">
-            <h3>Movimientos Recientes</h3>
+            <h3>Ultimos movimientos</h3>
             <button className="view-all-btn" onClick={() => handleNavigation('/historial')}>
               Ver todo
             </button>

@@ -63,10 +63,6 @@
 
 .expense-card {
   background-color: var(--bg-dark);
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   transition: transform 0.2s ease;
   border-left: 4px solid transparent;
   color: var(--text-light);
@@ -158,4 +154,46 @@
 .arrow-icon {
   color: var(--text-muted);
   opacity: 0.5;
+}
+
+.card-options {
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease-out,
+    opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+}
+.card-options.open {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.btn-delete {
+  background: var(--primary-accent);
+  color: var(--text-light);
+  padding: 5px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.2s;
+}
+
+.wrapper {
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease;
+  border-left: 4px solid transparent;
+  border-radius: 9px;
+  cursor: pointer;
 }

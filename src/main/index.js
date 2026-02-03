@@ -45,8 +45,6 @@ function createWindow() {
 app.whenReady().then(() => {
   // Establece el ID del modelo de usuario para Windows
   electronApp.setAppUserModelId('com.electron')
-  //Para resetear la base de datos en desarrollo
-  //dbManager.resetDB()
 
   // IPC para controles de ventana
   ipcMain.on('window-control', (event, action) => {
@@ -61,6 +59,13 @@ app.whenReady().then(() => {
   })
 
   // IPC para operaciones de base de datos
+
+  //Para resetear la base de datos en desarrollo
+  //dbManager.resetDB()
+
+  ipcMain.handle('db:del-historial', (event, id) => {
+    return dbManager.delHistorial(id)
+  })
   ipcMain.handle('db:get-historial', () => {
     return dbManager.getHistorial()
   })
@@ -105,6 +110,7 @@ app.whenReady().then(() => {
       return { success: false, error: error.message }
     }
   })
+
   // Crea la ventana principal de la aplicación
   createWindow()
   // Optimiza los atajos de teclado en desarrollo

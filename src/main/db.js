@@ -25,6 +25,21 @@ const dbManager = {
     db.exec('DROP TABLE IF EXISTS categorias;')
     db.exec(schema)
   },
+
+  //Delete queries
+
+  delHistorial: (id) => {
+    try {
+      return db.prepare('DELETE FROM historial_gastos WHERE gasto_id = ?').run(id)
+      success: true
+    } catch (error) {
+      console.error('Error en query de eliminación de gasto:', error)
+      return { success: false, error: error.message }
+    }
+  },
+
+  //Get queries
+
   getHistorial: () => {
     return db
       .prepare(
@@ -105,6 +120,9 @@ const dbManager = {
   getCategorias: () => {
     return db.prepare('SELECT * FROM categorias').all()
   },
+
+  // Insert queries
+
   insertCategoria: (nombre, descripcion) => {
     db.prepare('INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)').run(
       nombre,

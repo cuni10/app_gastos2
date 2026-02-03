@@ -21,6 +21,19 @@ const HistorialGastos = () => {
     setCardIsOpen(cardIsOpen === id ? null : id)
   }
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('¿Estás seguro de eliminar este gasto?')) {
+      return
+    }
+    const result = await window.api.delHistorial(id)
+    console.log('Resultado de eliminación:', result.changes)
+    if (result.changes === 1) {
+      setHistorial(historial.filter((gasto) => gasto.id !== id))
+    } else {
+      alert('Error', result.error)
+    }
+  }
+
   useEffect(() => {
     const fetchHistorial = async () => {
       // Llamamos a la función expuesta en el preload
@@ -114,7 +127,12 @@ const HistorialGastos = () => {
                   </div>
                 </div>
                 <div className={`card-options ${cardIsOpen === gasto.id ? 'open' : ''}`}>
-                  <button className="btn-delete">
+                  <button
+                    className="btn-delete"
+                    onClick={() => {
+                      handleDelete(gasto.id)
+                    }}
+                  >
                     <Trash2 /> Eliminar
                   </button>
                 </div>

@@ -3,6 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for base de datos
 const api = {
+  delHistorial: (id) => ipcRenderer.invoke('db:del-historial', id),
+
   getHistorial: () => ipcRenderer.invoke('db:get-historial'),
   getGastos: () => ipcRenderer.invoke('db:get-gastos'),
   getCategorias: () => ipcRenderer.invoke('db:get-categorias'),

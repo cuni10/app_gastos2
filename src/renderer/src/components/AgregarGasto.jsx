@@ -44,14 +44,30 @@ const AgregarGasto = () => {
 
       // limit min
       if (name === 'cuotas') {
-        if (value === '' || value === '0') {
-          newValue = value
-        } else if (parseInt(value, 10) < 2) {
-          newValue = '2'
+        if (value === '') {
+          newValue = ''
+        } else {
+          const numValue = parseInt(value, 10)
+
+          if (numValue === 1) {
+            newValue = value
+          } else {
+            newValue = numValue > 200 ? '200' : value
+          }
         }
       }
       return { ...prev, [name]: newValue }
     })
+  }
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target
+    if (name === 'cuotas') {
+      const numValue = parseInt(value, 10)
+      if (numValue < 2 || value === '') {
+        setFormData({ ...formData, cuotas: '2' })
+      }
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -106,6 +122,7 @@ const AgregarGasto = () => {
                 value={formData.monto}
                 onChange={handleChange}
                 placeholder="0"
+                maxLength={16}
                 required
               />
             </div>
@@ -120,6 +137,7 @@ const AgregarGasto = () => {
                 value={formData.nombre}
                 onChange={handleChange}
                 placeholder="Nombre del gasto"
+                maxLength={20}
                 required
               />
             </div>
@@ -137,6 +155,7 @@ const AgregarGasto = () => {
               value={formData.nota}
               onChange={handleChange}
               placeholder="Añade un detalle..."
+              maxLength={20}
             />
           </div>
           <div className="input-group-alt">
@@ -188,7 +207,9 @@ const AgregarGasto = () => {
                   name="cuotas"
                   value={formData.cuotas}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   placeholder="6"
+                  maxLength={4}
                   min="2"
                   required
                 />

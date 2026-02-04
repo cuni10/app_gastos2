@@ -10,6 +10,11 @@ import {
   Trash2
 } from 'lucide-react'
 import '../css/HistorialGastos.css'
+import Swal from 'sweetalert2'
+
+import withReactContent from 'sweetalert2-react-content'
+
+
 
 const HistorialGastos = () => {
   const [historial, setHistorial] = useState([])
@@ -21,18 +26,34 @@ const HistorialGastos = () => {
     setCardIsOpen(cardIsOpen === id ? null : id)
   }
 
+  const MySwal = withReactContent(Swal)
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Estás seguro de eliminar este gasto?')) {
-      return
-    }
-    const result = await window.api.delHistorial(id)
-    console.log('Resultado de eliminación:', result.changes)
-    if (result.changes === 1) {
-      setHistorial(historial.filter((gasto) => gasto.id !== id))
-    } else {
-      alert('Error', result.error)
-    }
+    MySwal.fire({
+      title: '¿Estás seguro?',
+      text: "Esta acción ejecutará una query en la base de datos",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, borrar registro'
+    }).then((result) => {
+      
+      if (result.isConfirmed) {
+        try {
+          window.api.delHistorial(id); 
+          setHistorial(historial.filter((gasto) => gasto.id !== id));
+          MySwal.fire(
+            '¡Borrado!',
+            'El registro ha sido eliminado de la base de datos.',
+            'success'
+          );
+        } catch (error) {
+          MySwal.fire('Error', 'No se pudo borrar: ' + error.message, 'error');
+        }
+      }
+    });
   }
+
 
   useEffect(() => {
     const fetchHistorial = async () => {

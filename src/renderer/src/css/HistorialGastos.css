@@ -163,6 +163,7 @@
     opacity 0.3s ease;
   max-height: 0;
   opacity: 0;
+  padding: 20px;
 }
 .card-options.open {
   max-height: 200px;

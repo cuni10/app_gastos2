@@ -27,25 +27,37 @@ const HistorialGastos = () => {
   }
 
   const MySwal = withReactContent(Swal)
+
+  const baseAlert = {
+    background:"var(--bg-dark)",
+    color:"var(--text-light)",
+  }
   const handleDelete = async (id) => {
     MySwal.fire({
+      ...baseAlert,
       title: '¿Estás seguro?',
-      text: "Esta acción ejecutará una query en la base de datos",
+      text: "Esta acción eliminara permanentemente.",
       icon: 'warning',
+      iconColor:"var(--primary-accent)",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, borrar registro'
+      cancelButtonColor: 'var(--primary-accent)',
+      confirmButtonColor: 'var(--card-bg)',
+      confirmButtonText: 'Sí, borrar registro',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       
       if (result.isConfirmed) {
         try {
           window.api.delHistorial(id); 
           setHistorial(historial.filter((gasto) => gasto.id !== id));
-          MySwal.fire(
-            '¡Borrado!',
-            'El registro ha sido eliminado de la base de datos.',
-            'success'
+          MySwal.fire({
+            ...baseAlert,
+            title: '¡Borrado!',
+            text: 'El registro ha sido eliminado de la base de datos.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: 'var(--primary-accent)'
+          }
           );
         } catch (error) {
           MySwal.fire('Error', 'No se pudo borrar: ' + error.message, 'error');
@@ -57,7 +69,7 @@ const HistorialGastos = () => {
 
   useEffect(() => {
     const fetchHistorial = async () => {
-      // Llamamos a la función expuesta en el preload
+      
       const datos = await window.api.getHistorial()
       console.log('Datos del historial:', datos)
       setHistorial(datos)

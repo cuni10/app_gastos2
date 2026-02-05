@@ -184,7 +184,9 @@ const Dashboard = () => {
               <div key={gasto.id} className="mini-item">
                 <div className="item-info">
                   <span className="item-name">{gasto.nombre}</span>
-                  <span className="item-date">{new Date(gasto.fechaPago).toLocaleDateString('es-AR')}</span>
+                  <span className="item-date">
+                    {new Date(gasto.fechaPago).toLocaleDateString('es-AR')}
+                  </span>
                 </div>
                 <span className="item-amount">-${gasto.monto.toLocaleString('es-AR')}</span>
               </div>

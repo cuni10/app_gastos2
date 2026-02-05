@@ -59,7 +59,6 @@ const Dashboard = () => {
     ((totalMesActual - totalMesAnterior) / totalMesAnterior) *
     100
   ).toFixed(2)
-
   return (
     <div className="dashboard-container">
       {/* HEADER: Logo, Fecha y Hora */}
@@ -101,19 +100,19 @@ const Dashboard = () => {
             <span className="label">Gasto total en {mesActual}</span>
             <h2 className="amount">${totalMesActual.toLocaleString('es-AR')}</h2>
 
-            {porcentajeDiferencia > 0 ? (
+            {porcentajeDiferencia > 0 && !Infinity ? (
               <div className="trend negative">
                 <ArrowUpRight size={16} />
                 <span>Gastaste {porcentajeDiferencia}% mas que el mes anterior.</span>
               </div>
-            ) : porcentajeDiferencia < 0 ? (
+            ) : porcentajeDiferencia < 0 && !-Infinity ? (
               <div className="trend positive">
                 <ArrowDownRight size={16} />
                 <span>Gastaste {porcentajeDiferencia}% menos que el mes anterior.</span>
               </div>
             ) : (
               <div className="trend">
-                <span> Igual que el mes anterior</span>
+                <span></span>
               </div>
             )}
           </div>
@@ -185,7 +184,7 @@ const Dashboard = () => {
               <div key={gasto.id} className="mini-item">
                 <div className="item-info">
                   <span className="item-name">{gasto.nombre}</span>
-                  <span className="item-date">{gasto.fechaPago}</span>
+                  <span className="item-date">{new Date(gasto.fechaPago).toLocaleDateString('es-AR')}</span>
                 </div>
                 <span className="item-amount">-${gasto.monto.toLocaleString('es-AR')}</span>
               </div>

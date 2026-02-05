@@ -100,13 +100,20 @@
   font-size: 2rem;
   margin: 5px 0;
 }
-
-.trend.positive {
-  color: #2ecc71;
+.trend {
+  color: var(--text-light);
   display: flex;
   align-items: center;
   gap: 4px;
   font-size: 0.8rem;
+}
+
+.trend.positive {
+  color: var(--success);
+}
+
+.trend.negative {
+  color: var(--error);
 }
 
 .chart-card {

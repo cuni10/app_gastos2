@@ -14,8 +14,6 @@ import Swal from 'sweetalert2'
 
 import withReactContent from 'sweetalert2-react-content'
 
-
-
 const HistorialGastos = () => {
   const [historial, setHistorial] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -29,27 +27,26 @@ const HistorialGastos = () => {
   const MySwal = withReactContent(Swal)
 
   const baseAlert = {
-    background:"var(--bg-dark)",
-    color:"var(--text-light)",
+    background: 'var(--bg-dark)',
+    color: 'var(--text-light)'
   }
   const handleDelete = async (id) => {
     MySwal.fire({
       ...baseAlert,
       title: '¿Estás seguro?',
-      text: "Esta acción eliminara permanentemente.",
+      text: 'Esta acción eliminara permanentemente.',
       icon: 'warning',
-      iconColor:"var(--primary-accent)",
+      iconColor: 'var(--primary-accent)',
       showCancelButton: true,
       cancelButtonColor: 'var(--primary-accent)',
       confirmButtonColor: 'var(--card-bg)',
       confirmButtonText: 'Sí, borrar registro',
-      cancelButtonText: 'Cancelar',
+      cancelButtonText: 'Cancelar'
     }).then((result) => {
-      
       if (result.isConfirmed) {
         try {
-          window.api.delHistorial(id); 
-          setHistorial(historial.filter((gasto) => gasto.id !== id));
+          window.api.delHistorial(id)
+          setHistorial(historial.filter((gasto) => gasto.id !== id))
           MySwal.fire({
             ...baseAlert,
             title: '¡Borrado!',
@@ -57,19 +54,16 @@ const HistorialGastos = () => {
             icon: 'success',
             confirmButtonText: 'Aceptar',
             confirmButtonColor: 'var(--primary-accent)'
-          }
-          );
+          })
         } catch (error) {
-          MySwal.fire('Error', 'No se pudo borrar: ' + error.message, 'error');
+          MySwal.fire('Error', 'No se pudo borrar: ' + error.message, 'error')
         }
       }
-    });
+    })
   }
-
 
   useEffect(() => {
     const fetchHistorial = async () => {
-      
       const datos = await window.api.getHistorial()
       console.log('Datos del historial:', datos)
       setHistorial(datos)

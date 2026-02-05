@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Calendar, Clock, ArrowDownRight, Wallet } from 'lucide-react'
+import { Calendar, Clock, ArrowDownRight, ArrowUpRight, Wallet } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
   XAxis,
@@ -16,6 +16,8 @@ import icon from '../../../../resources/logo.ico'
 
 const Dashboard = () => {
   const [historial, setHistorial] = useState([])
+  const [historialAnterior, setHistorialAnterior] = useState([])
+  const [historialLastMoves, setHistorialLastMoves] = useState([])
   const [currentTime, setCurrentTime] = useState(new Date())
   const [historialSeisMeses, setHistorialSeisMeses] = useState([])
   const navigate = useNavigate()
@@ -25,15 +27,22 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    const filtros = {
+    const mesActual = {
       mes: (new Date().getMonth() + 1).toString().padStart(2, '0'),
       anio: new Date().getFullYear().toString()
     }
+    const mesAnterior = {
+      mes: new Date().getMonth().toString().padStart(2, '0'),
+      anio: new Date().getFullYear().toString()
+    }
     const fetchData = async () => {
-      const datos = await window.api.getHistorialMes(filtros)
+      const datosMesActual = await window.api.getHistorialMes(mesActual)
+      const datosMesAnterior = await window.api.getHistorialMes(mesAnterior)
       const datosSeisMeses = await window.api.getHistorialSeisMeses()
       setHistorialSeisMeses(datosSeisMeses)
-      setHistorial(datos.slice(-5)) // Solo los últimos 5
+      setHistorialAnterior(datosMesAnterior)
+      setHistorial(datosMesActual)
+      setHistorialLastMoves(datosMesActual.slice(-5))
       console.log(datosSeisMeses)
     }
     fetchData()
@@ -45,6 +54,11 @@ const Dashboard = () => {
   const nombreMes = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date())
   const mesActual = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)
   const totalMesActual = historial.reduce((acc, curr) => acc + curr.monto, 0)
+  const totalMesAnterior = historialAnterior.reduce((acc, curr) => acc + curr.monto, 0)
+  const porcentajeDiferencia = (
+    ((totalMesActual - totalMesAnterior) / totalMesAnterior) *
+    100
+  ).toFixed(2)
 
   return (
     <div className="dashboard-container">
@@ -86,10 +100,22 @@ const Dashboard = () => {
           <div className="summary-content">
             <span className="label">Gasto total en {mesActual}</span>
             <h2 className="amount">${totalMesActual.toLocaleString('es-AR')}</h2>
-            <div className="trend positive">
-              <ArrowDownRight size={16} />
-              <span>12% menos que el mes anterior</span>
-            </div>
+
+            {porcentajeDiferencia > 0 ? (
+              <div className="trend negative">
+                <ArrowUpRight size={16} />
+                <span>Gastaste {porcentajeDiferencia}% mas que el mes anterior.</span>
+              </div>
+            ) : porcentajeDiferencia < 0 ? (
+              <div className="trend positive">
+                <ArrowDownRight size={16} />
+                <span>Gastaste {porcentajeDiferencia}% menos que el mes anterior.</span>
+              </div>
+            ) : (
+              <div className="trend">
+                <span> Igual que el mes anterior</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -155,7 +181,7 @@ const Dashboard = () => {
             </button>
           </div>
           <div className="mini-list">
-            {historial.map((gasto) => (
+            {historialLastMoves.map((gasto) => (
               <div key={gasto.id} className="mini-item">
                 <div className="item-info">
                   <span className="item-name">{gasto.nombre}</span>

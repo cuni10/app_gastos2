@@ -31,7 +31,6 @@ const dbManager = {
   delHistorial: (id) => {
     try {
       return db.prepare('DELETE FROM historial_gastos WHERE gasto_id = ?').run(id)
-      success: true
     } catch (error) {
       console.error('Error en query de eliminación de gasto:', error)
       return { success: false, error: error.message }

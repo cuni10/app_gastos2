@@ -62,8 +62,10 @@
 
 .dash-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.2fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: 0.4fr 1fr;
+  gap: 1.5rem;
+}
+.first-row {
   gap: 1.5rem;
 }
 .dash-wrapper {
@@ -75,6 +77,7 @@
   border-radius: 20px;
   padding: 1.5rem;
   border: 1px solid var(--border-subtle);
+  margin-bottom: 1.5rem;
 }
 
 .summary-card {

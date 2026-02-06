@@ -92,105 +92,107 @@ const Dashboard = () => {
 
       <div className="dash-grid">
         {/* CARD RESUMEN MENSUAL */}
-        <div className="dash-card summary-card">
-          <div className="card-icon-main">
-            <Wallet size={24} />
-          </div>
-          <div className="summary-content">
-            <span className="label">Gasto total en {mesActual}</span>
-            <h2 className="amount">${totalMesActual.toLocaleString('es-AR')}</h2>
+        <div className="first-row">
+          <div className="dash-card summary-card">
+            <div className="card-icon-main">
+              <Wallet size={24} />
+            </div>
+            <div className="summary-content">
+              <span className="label">Gasto total en {mesActual}</span>
+              <h2 className="amount">${totalMesActual.toLocaleString('es-AR')}</h2>
 
-            {porcentajeDiferencia > 0 && porcentajeDiferencia != Infinity ? (
-              <div className="trend negative">
-                <ArrowUpRight size={16} />
-                <span>{porcentajeDiferencia}% mas que el mes anterior.</span>
-              </div>
-            ) : porcentajeDiferencia < 0 && -Infinity ? (
-              <div className="trend positive">
-                <ArrowDownRight size={16} />
-                <span>{porcentajeDiferencia}% menos que el mes anterior.</span>
-              </div>
-            ) : (
-              <div className="trend">
-                <span></span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* GRÁFICO PRINCIPAL */}
-        <div className="dash-card chart-card">
-          <h3>Flujo de Gastos Semestral</h3>
-          <div className="chart-wrapper">
-            <ResponsiveContainer width="100%" height={250}>
-              <AreaChart
-                margin={{ top: 10, right: 20, left: 60, bottom: 0 }}
-                data={historialSeisMeses}
-              >
-                <defs>
-                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--primary-accent)" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="var(--primary-accent)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="var(--border-subtle)"
-                  vertical={false}
-                />
-                <XAxis dataKey="mes" stroke="var(--text-muted)" />
-                <YAxis
-                  tickFormatter={(value) =>
-                    `$${value.toLocaleString('es-AR', { minimumFractionDigits: 0 })}`
-                  }
-                  stroke="var(--text-muted)"
-                />
-                <Tooltip
-                  formatter={(value) => [`$${value.toLocaleString('es-AR')}`]}
-                  contentStyle={{
-                    backgroundColor: 'var(--card-bg)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: '10px'
-                  }}
-                  itemStyle={{ color: 'var(--text-light)' }}
-                  labelStyle={{
-                    color: 'var(--text-light)',
-                    fontWeight: 'bold',
-                    marginBottom: '5px'
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="total"
-                  stroke="var(--primary-accent)"
-                  fillOpacity={1}
-                  fill="url(#colorTotal)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* MINI HISTORIAL */}
-        <div className="dash-card history-mini">
-          <div className="card-header-flex">
-            <h3>Ultimos movimientos</h3>
-            <button className="view-all-btn" onClick={() => handleNavigation('/historial')}>
-              Ver todo
-            </button>
-          </div>
-          <div className="mini-list">
-            {historialLastMoves.map((gasto) => (
-              <div key={gasto.id} className="mini-item">
-                <div className="item-info">
-                  <span className="item-name">{gasto.nombre}</span>
-                  <span className="item-date">
-                    {new Date(gasto.fechaPago).toLocaleDateString('es-AR')}
-                  </span>
+              {porcentajeDiferencia > 0 && porcentajeDiferencia != Infinity ? (
+                <div className="trend negative">
+                  <ArrowUpRight size={16} />
+                  <span>{porcentajeDiferencia}% mas que el mes anterior.</span>
                 </div>
-                <span className="item-amount">-${gasto.monto.toLocaleString('es-AR')}</span>
-              </div>
-            ))}
+              ) : porcentajeDiferencia < 0 && -Infinity ? (
+                <div className="trend positive">
+                  <ArrowDownRight size={16} />
+                  <span>{porcentajeDiferencia}% menos que el mes anterior.</span>
+                </div>
+              ) : (
+                <div className="trend">
+                  <span></span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="dash-card history-mini">
+            <div className="card-header-flex">
+              <h3>Ultimos movimientos</h3>
+              <button className="view-all-btn" onClick={() => handleNavigation('/historial')}>
+                Ver todo
+              </button>
+            </div>
+            <div className="mini-list">
+              {historialLastMoves.map((gasto) => (
+                <div key={gasto.id} className="mini-item">
+                  <div className="item-info">
+                    <span className="item-name">{gasto.nombre}</span>
+                    <span className="item-date">
+                      {new Date(gasto.fechaPago).toLocaleDateString('es-AR')}
+                    </span>
+                  </div>
+                  <span className="item-amount">-${gasto.monto.toLocaleString('es-AR')}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* GRÁFICO PRINCIPAL */}
+        <div className="second-row">
+          <div className="dash-card chart-card">
+            <h3>Flujo de Gastos Semestral</h3>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={250}>
+                <AreaChart
+                  margin={{ top: 10, right: 20, left: 60, bottom: 0 }}
+                  data={historialSeisMeses}
+                >
+                  <defs>
+                    <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--primary-accent)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--primary-accent)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="var(--border-subtle)"
+                    vertical={false}
+                  />
+                  <XAxis dataKey="mes" stroke="var(--text-muted)" />
+                  <YAxis
+                    tickFormatter={(value) =>
+                      `$${value.toLocaleString('es-AR', { minimumFractionDigits: 0 })}`
+                    }
+                    stroke="var(--text-muted)"
+                  />
+                  <Tooltip
+                    formatter={(value) => [`$${value.toLocaleString('es-AR')}`]}
+                    contentStyle={{
+                      backgroundColor: 'var(--card-bg)',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: '10px'
+                    }}
+                    itemStyle={{ color: 'var(--text-light)' }}
+                    labelStyle={{
+                      color: 'var(--text-light)',
+                      fontWeight: 'bold',
+                      marginBottom: '5px'
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="total"
+                    stroke="var(--primary-accent)"
+                    fillOpacity={1}
+                    fill="url(#colorTotal)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>

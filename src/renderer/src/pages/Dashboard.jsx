@@ -184,7 +184,7 @@ const Dashboard = () => {
                     }}
                   />
                   <Area
-                    type="monotone"
+                    type="linear"
                     dataKey="total"
                     stroke="var(--primary-accent)"
                     fillOpacity={1}

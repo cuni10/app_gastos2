@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Save, DollarSign, Tag, FileText, List } from 'lucide-react'
+import { Save, DollarSign, Tag, FileText, List, CirclePlus } from 'lucide-react'
 import '../css/AgregarGasto.css'
 
 const AgregarGasto = () => {
@@ -165,14 +165,19 @@ const AgregarGasto = () => {
             <label>
               <List size={16} /> Categoría (Opcional)
             </label>
-            <select name="categoria_id" value={formData.categoria_id} onChange={handleChange}>
-              <option value="">Sin Categoria</option>
-              {categorias.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.nombre}
-                </option>
-              ))}
-            </select>
+            <div className="category">
+              <select name="categoria_id" value={formData.categoria_id} onChange={handleChange}>
+                <option value="">Sin Categoria</option>
+                {categorias.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.nombre}
+                  </option>
+                ))}
+              </select>
+              <div className="add-category">
+                <CirclePlus size={18} />
+              </div>
+            </div>
           </div>
         </div>
 

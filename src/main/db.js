@@ -51,6 +51,7 @@ const dbManager = {
       g.monto,
       g.nota,
       h.fecha_pago as fechaPago,
+      h.numero_cuota,
       c.nombre as categoria,
       g.estado,
       g.cuotas,
@@ -75,6 +76,7 @@ const dbManager = {
         g.monto,
         g.nota,
         h.fecha_pago as fechaPago,
+        h.numero_cuota,
         c.nombre as categoria,
         g.estado,
         g.cuotas,
@@ -141,6 +143,7 @@ const dbManager = {
     nota,
     cuotas,
     cuotas_pagadas,
+    cuotaActual,
     categoria_id
   ) => {
     const crearGasto = db.transaction((gastoData) => {
@@ -161,13 +164,64 @@ const dbManager = {
 
       const gastoId = info.lastInsertRowid
 
-      db.prepare('INSERT INTO historial_gastos (gasto_id, fecha_pago) VALUES (?, ?)').run(
-        gastoId,
-        new Date().toISOString().split('T')[0]
-      )
+      const cuotaRegistro = gastoData.cuotaActual || 1
+
+      db.prepare(
+        'INSERT INTO historial_gastos (gasto_id, fecha_pago,numero_cuota) VALUES (?, ?, ?)'
+      ).run(gastoId, new Date().toISOString().split('T')[0], cuotaRegistro)
     })
 
-    return crearGasto({ nombre, monto, estado, fecha, nota, cuotas, cuotas_pagadas, categoria_id })
+    return crearGasto({
+      nombre,
+      monto,
+      estado,
+      fecha,
+      nota,
+      cuotas,
+      cuotas_pagadas,
+      cuotaActual,
+      categoria_id
+    })
+  },
+
+  sincronizarPagosPendientes: () => {
+    const date = new Date()
+    const mes = date.getMonth() + 1
+    const anio = date.getFullYear()
+
+    const transaction = db.transaction(() => {
+      const pendientes = db
+        .prepare(
+          `SELECT * FROM gastos 
+      WHERE estado = 'activo' 
+      AND id NOT IN (
+        SELECT gasto_id FROM historial_gastos 
+        WHERE strftime('%m', fecha_pago) = ? AND strftime('%Y', fecha_pago) = ?)`
+        )
+        .all(mes.toString().padStart(2, '0'), anio.toString())
+
+      for (const gasto of pendientes) {
+        if (date.getDate() >= gasto.fecha_cobro) {
+          const cuotasPagadas = gasto.cuotas_pagadas + 1
+          let nuevoEstado = 'activo'
+
+          db.prepare(
+            'INSERT INTO historial_gastos (gasto_id, fecha_pago, numero_cuota) VALUES (?, ?, ?)'
+          ).run(gasto.id, date.toISOString().split('T')[0], cuotasPagadas)
+
+          if (gasto.cuotas > 0 && cuotasPagadas >= gasto.cuotas) {
+            nuevoEstado = 'finalizado'
+          }
+
+          db.prepare('UPDATE gastos SET estado = ?, cuotas_pagadas = ? WHERE id = ?').run(
+            nuevoEstado,
+            cuotasPagadas,
+            gasto.id
+          )
+        }
+      }
+    })
+    return transaction()
   }
 }
 

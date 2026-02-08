@@ -25,6 +25,7 @@ const schema = `
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         gasto_id INTEGER NOT NULL,
         fecha_pago DATE NOT NULL,
+        numero_cuota INTEGER,
 
         foreign KEY (gasto_id) REFERENCES gastos(id)
         ON UPDATE RESTRICT

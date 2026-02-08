@@ -112,6 +112,9 @@ app.whenReady().then(() => {
       return { success: false, error: error.message }
     }
   })
+  ipcMain.handle('db:sincronizar-pagos-pendientes', () => {
+    return dbManager.sincronizarPagosPendientes()
+  })
 
   // Crea la ventana principal de la aplicación
   createWindow()

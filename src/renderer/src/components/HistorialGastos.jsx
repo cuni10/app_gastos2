@@ -133,7 +133,7 @@ const HistorialGastos = () => {
                         ''
                       )}
 
-                      {gasto.estado === 'activo' ? (
+                      {gasto.numero_cuota ? (
                         <div className="info-item">
                           <div className="info-item monthly-badge">
                             <CalendarSync size={14} />
@@ -141,7 +141,7 @@ const HistorialGastos = () => {
                           </div>
                           <div className="info-item monthly-badge">
                             <Calendar1 size={14} />
-                            <span>Cuota: {gasto.cuotaActual + '/' + gasto.cuotas}</span>
+                            <span>Cuota: {gasto.numero_cuota + '/' + gasto.cuotas}</span>
                           </div>
                         </div>
                       ) : (

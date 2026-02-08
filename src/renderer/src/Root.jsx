@@ -6,13 +6,16 @@ import './css/Root.css'
 import { useEffect } from 'react'
 
 function Root() {
-  const getGastos = async () => {
-    const gastos = await window.api.getGastos()
-    console.log(gastos)
-  }
-
   useEffect(() => {
-    getGastos()
+    const checkPendientes = async () => {
+      try {
+        console.log('sincronizando pagos pendientes')
+        await window.api.sincronizarPagosPendientes()
+      } catch (error) {
+        console.error('Error al sincronizar pagos pendientes', error)
+      }
+    }
+    checkPendientes()
   }, [])
 
   return (

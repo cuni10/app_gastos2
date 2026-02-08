@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import {
   Calendar,
   Tag,
-  Repeat,
+  CalendarSync,
+  Calendar1,
   ChevronRight,
   ChevronDown,
   FileText,
@@ -132,10 +133,16 @@ const HistorialGastos = () => {
                         ''
                       )}
 
-                      {gasto.esMensual ? (
-                        <div className="info-item monthly-badge">
-                          <Repeat size={14} />
-                          <span>Mensual (Día {gasto.diaPagoMensual})</span>
+                      {gasto.estado === 'activo' ? (
+                        <div className="info-item">
+                          <div className="info-item monthly-badge">
+                            <CalendarSync size={14} />
+                            <span>Mensual (Día {gasto.diaPagoMensual})</span>
+                          </div>
+                          <div className="info-item monthly-badge">
+                            <Calendar1 size={14} />
+                            <span>Cuota: {gasto.cuotaActual + '/' + gasto.cuotas}</span>
+                          </div>
                         </div>
                       ) : (
                         ''

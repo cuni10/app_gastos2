@@ -8,11 +8,12 @@ const schema = `
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL,
         monto REAL NOT NULL,
-        mensual BOOLEAN NOT NULL,
+        estado TEXT NOT NULL,
         fecha_cobro INTEGER,
         nota TEXT,
-        cuotas INTEGER,
-        categoria_id INTEGER,
+        cuotas INTEGER DEFAULT 1,
+        cuotas_pagadas INTEGER DEFAULT 0,
+        categoria_id INTEGER, 
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
         Foreign KEY (categoria_id) REFERENCES categorias(id)

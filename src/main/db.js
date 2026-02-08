@@ -52,8 +52,9 @@ const dbManager = {
       g.nota,
       h.fecha_pago as fechaPago,
       c.nombre as categoria,
-      g.mensual as esMensual,
-      g.cuotas as cuotas,
+      g.estado,
+      g.cuotas,
+      g.cuotas_pagadas as cuotaActual,
       g.fecha_cobro as diaPagoMensual
       
     FROM historial_gastos h
@@ -75,7 +76,9 @@ const dbManager = {
         g.nota,
         h.fecha_pago as fechaPago,
         c.nombre as categoria,
-        g.mensual as esMensual
+        g.estado,
+        g.cuotas,
+        g.cuotas_pagadas as cuotaActual
       FROM historial_gastos h
       JOIN gastos g ON h.gasto_id = g.id
       LEFT JOIN categorias c ON g.categoria_id = c.id
@@ -130,19 +133,29 @@ const dbManager = {
       descripcion
     )
   },
-  insertGastoConHistorial: (nombre, monto, mensual, fecha, nota, cuotas, categoria_id) => {
+  insertGastoConHistorial: (
+    nombre,
+    monto,
+    estado,
+    fecha,
+    nota,
+    cuotas,
+    cuotas_pagadas,
+    categoria_id
+  ) => {
     const crearGasto = db.transaction((gastoData) => {
       const info = db
         .prepare(
-          'INSERT INTO gastos (nombre, monto, mensual, fecha_cobro, nota, cuotas, categoria_id) VALUES (?, ?, ?, ?, ?, ?, ?)'
+          'INSERT INTO gastos (nombre, monto, estado, fecha_cobro, nota, cuotas, cuotas_pagadas, categoria_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         )
         .run(
           gastoData.nombre,
           gastoData.monto,
-          gastoData.mensual,
+          gastoData.estado,
           gastoData.fecha,
           gastoData.nota,
           gastoData.cuotas,
+          gastoData.cuotas_pagadas,
           gastoData.categoria_id
         )
 
@@ -154,7 +167,7 @@ const dbManager = {
       )
     })
 
-    return crearGasto({ nombre, monto, mensual, fecha, nota, cuotas, categoria_id })
+    return crearGasto({ nombre, monto, estado, fecha, nota, cuotas, cuotas_pagadas, categoria_id })
   }
 }
 

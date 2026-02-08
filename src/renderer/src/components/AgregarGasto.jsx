@@ -12,9 +12,10 @@ const AgregarGasto = () => {
     monto: '',
     nota: '',
     categoria_id: '',
-    mensual: false,
+    estado: 'creado',
     fecha_cobro: '',
-    cuotas: ''
+    cuotas: '',
+    cuotas_pagadas: 0
   })
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const AgregarGasto = () => {
       let newValue = type === 'checkbox' ? checked : value
       if (name === 'monto') {
         const rawValue = value.replace(/\D/g, '')
-        newValue = rawValue === '' ? '' : new Intl.NumberFormat('de-DE').format(parseInt(rawValue))
+        newValue = rawValue === '' ? '' : new Intl.NumberFormat('es-AR').format(parseInt(rawValue))
       }
       // Limit dia_cobro between 1 and 31
       if (name === 'fecha_cobro') {
@@ -75,11 +76,12 @@ const AgregarGasto = () => {
     setLoading(true)
     const formDataSql = {
       ...formData,
-      mensual: formData.mensual ? 1 : 0,
+      estado: formData.mensual ? 'activo' : 'unico',
       categoria_id: formData.categoria_id ? Number(formData.categoria_id) : null,
       monto: Number(formData.monto.toString().replace(/\./g, '')),
       fecha_cobro: formData.fecha_cobro ? Number(formData.fecha_cobro) : null,
-      cuotas: Number(formData.cuotas)
+      cuotas: Number(formData.cuotas),
+      cuotas_pagadas: 1
     }
     try {
       await window.api.insertGastoConHistorial(formDataSql)
@@ -88,9 +90,10 @@ const AgregarGasto = () => {
         monto: '',
         nota: '',
         categoria_id: '',
-        mensual: false,
+        estado: 'creado',
         fecha_cobro: '',
-        cuotas: ''
+        cuotas: '',
+        cuotas_pagadas: 0
       })
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 6000)

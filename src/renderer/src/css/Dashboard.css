@@ -116,7 +116,7 @@
 }
 
 .trend.negative {
-  color: var(--error);
+  color: var(--secundary-accent);
 }
 
 .chart-card {

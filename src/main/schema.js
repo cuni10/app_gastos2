@@ -31,5 +31,18 @@ const schema = `
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
     );
+
+    CREATE TABLE IF NOT EXISTS adjuntos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        historial_id INTEGER NOT NULL,
+        nombre_original TEXT NOT NULL,
+        nombre_archivo TEXT NOT NULL,
+        tipo TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+        FOREIGN KEY (historial_id) REFERENCES historial_gastos(id)
+        ON UPDATE RESTRICT
+        ON DELETE CASCADE
+    );
 `
 export default schema

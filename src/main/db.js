@@ -184,6 +184,30 @@ const dbManager = {
     })
   },
 
+  // Adjuntos queries
+
+  insertAdjunto: (historial_id, nombre_original, nombre_archivo, tipo) => {
+    return db
+      .prepare(
+        'INSERT INTO adjuntos (historial_id, nombre_original, nombre_archivo, tipo) VALUES (?, ?, ?, ?)'
+      )
+      .run(historial_id, nombre_original, nombre_archivo, tipo)
+  },
+
+  getAdjuntos: (historial_id) => {
+    return db
+      .prepare('SELECT * FROM adjuntos WHERE historial_id = ? ORDER BY created_at DESC')
+      .all(historial_id)
+  },
+
+  delAdjunto: (id) => {
+    const adjunto = db.prepare('SELECT nombre_archivo FROM adjuntos WHERE id = ?').get(id)
+    if (adjunto) {
+      db.prepare('DELETE FROM adjuntos WHERE id = ?').run(id)
+    }
+    return adjunto
+  },
+
   sincronizarPagosPendientes: () => {
     const date = new Date()
     const mes = date.getMonth() + 1

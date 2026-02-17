@@ -4,22 +4,22 @@
 
 Construida sobre **Electron**, esta herramienta garantiza el rendimiento de una aplicación nativa con la flexibilidad de las tecnologías web, funcionando de manera local para asegurar la privacidad y rapidez de los datos.
 
-## 📋 Contexto del Proyecto
+## Contexto del Proyecto
 
 Este software nace de la necesidad de optimizar el seguimiento de los flujos de dinero en la agencia. Permite a los administradores visualizar en tiempo real el estado financiero del negocio, controlando desde gastos menores de insumos hasta costos significativos de reparaciones y gestoría vehicular.
 
-## 🚀 Características Principales
+## Características Principales
 
 - **Dashboard Financiero:** Visualización gráfica del balance de ingresos vs. egresos operativos mediante **Recharts**.
 - **Gestión de Caja:** Registro detallado de movimientos (entradas por señas/ventas y salidas por repuestos/servicios).
 - **Control de Gastos Operativos:** Categorización de gastos (Taller, Gestoría, Administración, Ventas).
 - **Base de Datos Local Optimizada:** Almacenamiento seguro mediante **better-sqlite3**, ideal para entornos de oficina sin dependencia crítica de internet.
 - **Seguridad en Operaciones:** Sistema de alertas y confirmaciones para evitar la eliminación accidental de registros contables importantes.
-- **Reportes:** Capacidad de visualizar el histórico de transacciones para auditorías internas.
+- **Reportes:** Capacidad de visualizar el histórico de transacciones para auditorías inter
 
-![1771230936738](image/README/1771230936738.png)
+![1771301222252](image/README/1771301222252.png)
 
-![1771230960356](image/README/1771230960356.png)
+![1771301158347](image/README/1771301158347.png)![1771301175943](image/README/1771301175943.png)
 
 ## Próximas Implementaciones (Roadmap)
 
@@ -39,17 +39,17 @@ El proyecto se encuentra en evolución continua. Las siguientes funcionalidades 
   - Informes de dominio y libre deuda.
   - Formularios 08 y verificaciones policiales.
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 La arquitectura del proyecto está diseñada para ser robusta, mantenible y escalable:
 
-- **Core:** Electron (Main & Renderer Process)
+- **Core:** Electron
 - **Frontend:** React + Hooks
-- **Base de Datos:** better-sqlite3 (SQLite sincrónico de alto rendimiento)
+- **Base de Datos:** better-sqlite3
 - **Visualización de Datos:** Recharts
 - **Estilos:** CSS Modules
 
-## 📦 Instalación y Despliegue
+## Instalación y Despliegue
 
 Instrucciones para levantar el proyecto en un entorno de desarrollo o producción local:
 

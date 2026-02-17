@@ -2,20 +2,16 @@
 
 **App Gastos** es una aplicación de escritorio desarrollada a medida para una empresa de venta automotriz. Su objetivo principal es la digitalización y el control centralizado de los movimientos financieros, automoviles, permitiendo una gestión eficiente de los gastos operativos, administrativos y de taller.
 
-Construida sobre **Electron**, esta herramienta garantiza el rendimiento de una aplicación nativa con la flexibilidad de las tecnologías web, funcionando de manera local para asegurar la privacidad y rapidez de los datos.
-
-## Contexto del Proyecto
-
 Este software nace de la necesidad de optimizar el seguimiento de los flujos de dinero en la agencia. Permite a los administradores visualizar en tiempo real el estado financiero del negocio, controlando desde gastos menores de insumos hasta costos significativos de reparaciones y gestoría vehicular.
 
-## Características Principales
+## Características
 
-- **Dashboard Financiero:** Visualización gráfica del balance de ingresos vs. egresos operativos mediante **Recharts**.
-- **Gestión de Caja:** Registro detallado de movimientos (entradas por señas/ventas y salidas por repuestos/servicios).
+- **Dashboard Financiero:** Visualización gráfica del balance de ingresos vs egresos operativos mediante reacharts.
+- **Gestión de Gastos:** Registro detallado de movimientos (entradas por señas/ventas y salidas por repuestos/servicios).
 - **Control de Gastos Operativos:** Categorización de gastos (Taller, Gestoría, Administración, Ventas).
-- **Base de Datos Local Optimizada:** Almacenamiento seguro mediante **better-sqlite3**, ideal para entornos de oficina sin dependencia crítica de internet.
+- **Base de Datos Local Optimizada:** Almacenamiento seguro mediante better-sqlite3, ideal para entornos de oficina sin dependencia crítica de internet.
 - **Seguridad en Operaciones:** Sistema de alertas y confirmaciones para evitar la eliminación accidental de registros contables importantes.
-- **Reportes:** Capacidad de visualizar el histórico de transacciones para auditorías inter
+- **Reportes:** Capacidad de visualizar el histórico de transacciones para auditorías internas.
 
 ![1771301222252](image/README/1771301222252.png)
 
@@ -25,7 +21,7 @@ Este software nace de la necesidad de optimizar el seguimiento de los flujos de 
 
 ## Próximas Implementaciones (Roadmap)
 
-El proyecto se encuentra en evolución continua. Las siguientes funcionalidades están planificadas para las próximas versiones:
+Las siguientes funcionalidades están planificadas para las próximas versiones:
 
 - **Digitalización de Comprobantes (Suba de Facturas):**
   Implementación de un sistema para adjuntar y almacenar facturas, recibos y tickets de compra directamente en cada transacción registrada, facilitando la auditoría contable.
@@ -43,13 +39,11 @@ El proyecto se encuentra en evolución continua. Las siguientes funcionalidades 
 
 ## Stack Tecnológico
 
-La arquitectura del proyecto está diseñada para ser robusta, mantenible y escalable:
-
 - **Core:** Electron
 - **Frontend:** React + Hooks
 - **Base de Datos:** better-sqlite3
 - **Visualización de Datos:** Recharts
-- **Estilos:** CSS Modules
+- **Estilos:** CSS Modules, Lucide React, SweetAlert2
 
 ## Instalación y Despliegue
 
@@ -85,17 +79,29 @@ Instrucciones para levantar el proyecto en un entorno de desarrollo o producció
 ## Estructura del Proyecto
 
 ```text
-app_gastos2/
-├── src/
-│   ├── main/           # Lógica del proceso principal (Backend local)
-│   ├── renderer/       # Interfaz de usuario (React)
-│   │   ├── components/ # Dashboard, Tablas de Gastos, Formularios
-│   │   ├── styles/     # Estilos corporativos
-│   │   └── App.jsx
-│   └── database/       # Schemas y migraciones de SQLite
-├── resources/          # Recursos estáticos
-├── package.json
-└── README.md
+├── resources               # Recursos extras
+├── src
+│   ├── db
+│   │   └── gastos.db       # El archivo de base de datos
+│   │
+│   ├── main                # Lógica del Backend
+│   │   ├── db.js           # Conexión con better-sqlite3
+│   │   ├── schema.js       # Define las tablas
+│   │   └── index.js        # Proceso principal (IPC handlers)
+│   │
+│   ├── preload
+│   │   └── index.js        # Puente de seguridad (contextBridge)
+│   │
+│   └── renderer            # Frontend (React)
+│       ├── index.html
+│       └── src
+│           ├── components  # Componentes
+│           ├── css         # Estilos CSS Puro
+│           ├── pages       # Vistas
+│           ├── main.jsx    # Archivo base, router
+│           └── Root.jsx    # Layout estructura
+├── electron-builder.yml    # Configuracion para crear app final (Build)
+└── package.json
 ```
 
-Desarrollado por [cuni10](https://github.com/cuni10)
+Pensado y desarrollado por [cuni10](https://github.com/cuni10)

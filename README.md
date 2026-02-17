@@ -19,7 +19,9 @@ Este software nace de la necesidad de optimizar el seguimiento de los flujos de 
 
 ![1771301222252](image/README/1771301222252.png)
 
-![1771301158347](image/README/1771301158347.png)![1771301175943](image/README/1771301175943.png)
+![1771301158347](image/README/1771301158347.png)
+
+![1771301175943](image/README/1771301175943.png)
 
 ## Próximas Implementaciones (Roadmap)
 

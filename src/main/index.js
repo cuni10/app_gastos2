@@ -94,17 +94,29 @@ app.whenReady().then(() => {
 
   ipcMain.handle('db:insert-gasto-con-historial', (event, gasto) => {
     try {
-      const { nombre, monto, estado, fecha_cobro, nota, cuotas, cuotas_pagadas, categoria_id } =
-        gasto
-      const id = dbManager.insertGastoConHistorial(
+      const {
         nombre,
         monto,
         estado,
+        tipo_pago,
         fecha_cobro,
         nota,
         cuotas,
         cuotas_pagadas,
-        categoria_id
+        categoria_id,
+        cuotaActual
+      } = gasto
+      const id = dbManager.insertGastoConHistorial(
+        nombre,
+        monto,
+        estado,
+        tipo_pago,
+        fecha_cobro,
+        nota,
+        cuotas,
+        cuotas_pagadas,
+        categoria_id,
+        cuotaActual
       )
       return { success: true, id }
     } catch (error) {

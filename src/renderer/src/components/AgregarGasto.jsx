@@ -12,6 +12,7 @@ const AgregarGasto = () => {
     monto: '',
     nota: '',
     categoria_id: '',
+    tipo_pago: 'unico',
     estado: 'creado',
     fecha_cobro: '',
     cuotas: '',
@@ -76,7 +77,9 @@ const AgregarGasto = () => {
     setLoading(true)
     const formDataSql = {
       ...formData,
-      estado: formData.mensual ? 'activo' : 'unico',
+      estado: formData.mensual ? 'activo' : 'finalizado',
+      tipo_pago: formData.mensual ? 'cuotas' : 'unico',
+      nota: formData.nota || null,
       categoria_id: formData.categoria_id ? Number(formData.categoria_id) : null,
       monto: Number(formData.monto.toString().replace(/\./g, '')),
       fecha_cobro: formData.fecha_cobro ? Number(formData.fecha_cobro) : null,

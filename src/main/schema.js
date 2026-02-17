@@ -7,8 +7,9 @@ const schema = `
     CREATE TABLE IF NOT EXISTS gastos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL,
-        monto REAL NOT NULL,
+        monto INTEGER NOT NULL, 
         estado TEXT NOT NULL,
+        tipo_pago TEXT DEFAULT 'unico',
         fecha_cobro INTEGER,
         nota TEXT,
         cuotas INTEGER DEFAULT 1,
@@ -24,6 +25,7 @@ const schema = `
     CREATE TABLE IF NOT EXISTS historial_gastos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         gasto_id INTEGER NOT NULL,
+        monto INTEGER NOT NULL,
         fecha_pago DATE NOT NULL,
         numero_cuota INTEGER,
 

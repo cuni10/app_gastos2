@@ -32,6 +32,7 @@ const dbManager = {
 
   delHistorial: (id) => {
     try {
+      console.log('Registro de historial eliminado con ID:', id)
       return db.prepare('DELETE FROM historial_gastos WHERE gasto_id = ?').run(id)
     } catch (error) {
       console.error('Error en query de eliminación de gasto:', error)
@@ -48,7 +49,7 @@ const dbManager = {
     SELECT 
       h.id,
       g.nombre,
-      g.monto,
+      h.monto,
       g.nota,
       h.fecha_pago as fechaPago,
       h.numero_cuota,
@@ -56,6 +57,7 @@ const dbManager = {
       g.estado,
       g.cuotas,
       g.cuotas_pagadas as cuotaActual,
+      g.tipo_pago,
       g.fecha_cobro as diaPagoMensual
       
     FROM historial_gastos h
@@ -73,7 +75,7 @@ const dbManager = {
     SELECT 
         h.id,
         g.nombre,
-        g.monto,
+        h.monto,
         g.nota,
         h.fecha_pago as fechaPago,
         h.numero_cuota,
@@ -89,7 +91,7 @@ const dbManager = {
       ORDER BY datetime(h.fecha_pago) DESC, h.id DESC;
   `
       )
-      .all(mes, anio)
+      .all(mes.toString().padStart(2, '0'), anio.toString())
   },
   getHistorialSeisMeses: () => {
     return db
@@ -110,7 +112,7 @@ const dbManager = {
         WHEN '11' THEN 'Noviembre' 
         WHEN '12' THEN 'Diciembre'
       END as mes,
-      SUM(g.monto) as total
+      SUM(h.monto) as total -- Sumamos lo que realmente se pagó en el historial
     FROM historial_gastos h
     JOIN gastos g ON h.gasto_id = g.id
     WHERE h.fecha_pago >= date('now', 'start of month', '-5 months')
@@ -139,22 +141,24 @@ const dbManager = {
     nombre,
     monto,
     estado,
+    tipo_pago,
     fecha,
     nota,
     cuotas,
     cuotas_pagadas,
-    cuotaActual,
-    categoria_id
+    categoria_id,
+    cuotaActual
   ) => {
     const crearGasto = db.transaction((gastoData) => {
       const info = db
         .prepare(
-          'INSERT INTO gastos (nombre, monto, estado, fecha_cobro, nota, cuotas, cuotas_pagadas, categoria_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+          'INSERT INTO gastos (nombre, monto, estado, tipo_pago, fecha_cobro, nota, cuotas, cuotas_pagadas, categoria_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
         )
         .run(
           gastoData.nombre,
           gastoData.monto,
           gastoData.estado,
+          gastoData.tipo_pago,
           gastoData.fecha,
           gastoData.nota,
           gastoData.cuotas,
@@ -167,14 +171,15 @@ const dbManager = {
       const cuotaRegistro = gastoData.cuotaActual || 1
 
       db.prepare(
-        'INSERT INTO historial_gastos (gasto_id, fecha_pago,numero_cuota) VALUES (?, ?, ?)'
-      ).run(gastoId, new Date().toISOString().split('T')[0], cuotaRegistro)
+        'INSERT INTO historial_gastos (gasto_id, monto, fecha_pago, numero_cuota) VALUES (?, ?, ?, ?)'
+      ).run(gastoId, gastoData.monto, new Date().toISOString().split('T')[0], cuotaRegistro)
     })
 
     return crearGasto({
       nombre,
       monto,
       estado,
+      tipo_pago,
       fecha,
       nota,
       cuotas,
@@ -193,31 +198,42 @@ const dbManager = {
       const pendientes = db
         .prepare(
           `SELECT * FROM gastos 
-      WHERE estado = 'activo' 
+      WHERE estado = 'activo'
+      AND tipo_pago IN ('cuotas') 
       AND id NOT IN (
         SELECT gasto_id FROM historial_gastos 
         WHERE strftime('%m', fecha_pago) = ? AND strftime('%Y', fecha_pago) = ?)`
         )
         .all(mes.toString().padStart(2, '0'), anio.toString())
 
+      // Preparamos las sentencias fuera del bucle para mejor rendimiento
+      const insertHistorial = db.prepare(
+        'INSERT INTO historial_gastos (gasto_id, monto, fecha_pago, numero_cuota) VALUES (?, ?, ?, ?)'
+      )
+      const updateGasto = db.prepare(
+        'UPDATE gastos SET estado = ?, cuotas_pagadas = ? WHERE id = ?'
+      )
+
       for (const gasto of pendientes) {
         if (date.getDate() >= gasto.fecha_cobro) {
           const cuotasPagadas = gasto.cuotas_pagadas + 1
           let nuevoEstado = 'activo'
 
-          db.prepare(
-            'INSERT INTO historial_gastos (gasto_id, fecha_pago, numero_cuota) VALUES (?, ?, ?)'
-          ).run(gasto.id, date.toISOString().split('T')[0], cuotasPagadas)
+          // Insertamos el registro de pago automático
+          insertHistorial.run(
+            gasto.id,
+            gasto.monto,
+            date.toISOString().split('T')[0],
+            cuotasPagadas
+          )
 
-          if (gasto.cuotas > 0 && cuotasPagadas >= gasto.cuotas) {
+          // Lógica de finalización: Solo si es tipo 'cuotas' y llegamos al total.
+          // Si es 'suscripcion', sigue activo por siempre.
+          if (gasto.tipo_pago === 'cuotas' && gasto.cuotas > 0 && cuotasPagadas >= gasto.cuotas) {
             nuevoEstado = 'finalizado'
           }
 
-          db.prepare('UPDATE gastos SET estado = ?, cuotas_pagadas = ? WHERE id = ?').run(
-            nuevoEstado,
-            cuotasPagadas,
-            gasto.id
-          )
+          updateGasto.run(nuevoEstado, cuotasPagadas, gasto.id)
         }
       }
     })

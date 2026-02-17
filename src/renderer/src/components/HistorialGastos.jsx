@@ -8,7 +8,8 @@ import {
   ChevronDown,
   FileText,
   Search,
-  Trash2
+  Trash2,
+  ClipboardCheck
 } from 'lucide-react'
 import '../css/HistorialGastos.css'
 import Swal from 'sweetalert2'
@@ -32,7 +33,7 @@ const HistorialGastos = () => {
     color: 'var(--text-light)'
   }
   const handleDelete = async (id) => {
-    MySwal.fire({
+    const result = await MySwal.fire({
       ...baseAlert,
       title: '¿Estás seguro?',
       text: 'Esta acción eliminara permanentemente.',
@@ -43,24 +44,24 @@ const HistorialGastos = () => {
       confirmButtonColor: 'var(--card-bg)',
       confirmButtonText: 'Sí, borrar registro',
       cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        try {
-          window.api.delHistorial(id)
-          setHistorial(historial.filter((gasto) => gasto.id !== id))
-          MySwal.fire({
-            ...baseAlert,
-            title: '¡Borrado!',
-            text: 'El registro ha sido eliminado de la base de datos.',
-            icon: 'success',
-            confirmButtonText: 'Aceptar',
-            confirmButtonColor: 'var(--primary-accent)'
-          })
-        } catch (error) {
-          MySwal.fire('Error', 'No se pudo borrar: ' + error.message, 'error')
-        }
-      }
     })
+
+    if (result.isConfirmed) {
+      try {
+        await window.api.delHistorial(id)
+        setHistorial((prev) => prev.filter((gasto) => gasto.id !== id))
+        MySwal.fire({
+          ...baseAlert,
+          title: '¡Borrado!',
+          text: 'El registro ha sido eliminado de la base de datos.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: 'var(--primary-accent)'
+        })
+      } catch (error) {
+        MySwal.fire('Error', 'No se pudo borrar: ' + error.message, 'error')
+      }
+    }
   }
 
   useEffect(() => {
@@ -74,7 +75,7 @@ const HistorialGastos = () => {
   }, [])
 
   const filteredGastos = historial.filter((gasto) =>
-    gasto.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    gasto.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
   )
   return (
     <div className="container-history">
@@ -133,7 +134,7 @@ const HistorialGastos = () => {
                         ''
                       )}
 
-                      {gasto.numero_cuota ? (
+                      {gasto.tipo_pago !== 'unico' ? (
                         <div className="info-item">
                           <div className="info-item monthly-badge">
                             <CalendarSync size={14} />
@@ -141,11 +142,18 @@ const HistorialGastos = () => {
                           </div>
                           <div className="info-item monthly-badge">
                             <Calendar1 size={14} />
-                            <span>Cuota: {gasto.numero_cuota + '/' + gasto.cuotas}</span>
+                            <span>
+                              Cuota: {gasto.numero_cuota}/{gasto.cuotas}
+                            </span>
                           </div>
                         </div>
                       ) : (
-                        ''
+                        <div className="info-item">
+                          <div className="info-item unico-badge">
+                            <ClipboardCheck size={14} />
+                            <span>Unico</span>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>

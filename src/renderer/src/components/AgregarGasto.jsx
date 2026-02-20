@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Save, DollarSign, Tag, FileText, List, CirclePlus } from 'lucide-react'
 import '../css/AgregarGasto.css'
+import { showAddCategoryAlert } from './categoryAlert'
 
 const AgregarGasto = () => {
   const [categorias, setCategorias] = useState([])
@@ -26,6 +27,19 @@ const AgregarGasto = () => {
     }
     fetchCategorias()
   }, [])
+
+  const handleAddCategory = async () => {
+    const newCategoryData = await showAddCategoryAlert()
+    if (newCategoryData) {
+      try {
+        const newCategory = await window.api.insertCategoria(newCategoryData)
+        setCategorias((prev) => [...prev, newCategory])
+        setFormData((prev) => ({ ...prev, categoria_id: newCategory.id.toString() }))
+      } catch (error) {
+        console.error('Error al agregar categoría:', error)
+      }
+    }
+  }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -177,7 +191,7 @@ const AgregarGasto = () => {
                   </option>
                 ))}
               </select>
-              <div className="add-category">
+              <div className="add-category" onClick={handleAddCategory}>
                 <CirclePlus size={18} />
               </div>
             </div>

@@ -7,6 +7,7 @@ import dbManager from './db'
 
 function createWindow() {
   // Parametros de la ventana principal
+
   const mainWindow = new BrowserWindow({
     width: 960,
     height: 800,
@@ -23,18 +24,21 @@ function createWindow() {
     }
   })
   // Muestra la ventana cuando esté lista para evitar pantalla blanca
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.setTitle('JMT Automotores')
     mainWindow.show()
   })
 
   // Abrir enlaces externos en el navegador predeterminado
+
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
 
   // Carga el archivo index.html de la aplicación.
+
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -44,9 +48,11 @@ function createWindow() {
 
 app.whenReady().then(() => {
   // Establece el ID del modelo de usuario para Windows
+
   electronApp.setAppUserModelId('com.electron')
 
   // IPC para controles de ventana
+
   ipcMain.on('window-control', (event, action) => {
     const win = BrowserWindow.getFocusedWindow()
     if (!win) return
@@ -90,6 +96,7 @@ app.whenReady().then(() => {
   ipcMain.handle('db:insert-categoria', (event, categoria) => {
     const { nombre, descripcion } = categoria
     dbManager.insertCategoria(nombre, descripcion)
+    return dbManager.insertCategoria(nombre, descripcion)
   })
 
   ipcMain.handle('db:insert-gasto-con-historial', (event, gasto) => {
@@ -129,12 +136,17 @@ app.whenReady().then(() => {
   })
 
   // Crea la ventana principal de la aplicación
+
   createWindow()
+
   // Optimiza los atajos de teclado en desarrollo
+
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
   // Reabre la ventana si se hace clic en el icono de la aplicación en el dock (macOS)
+
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
@@ -143,7 +155,9 @@ app.whenReady().then(() => {
 app.on('will-quit', () => {
   globalShortcut.unregisterAll()
 })
+
 // Cierra la aplicación cuando se cierran todas las ventanas, excepto en macOS
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()

@@ -29,7 +29,7 @@ const HistorialGastos = () => {
   const MySwal = withReactContent(Swal)
 
   const baseAlert = {
-    background: 'var(--bg-dark)',
+    background: 'var(--card-bg)',
     color: 'var(--text-light)'
   }
   const handleDelete = async (id) => {

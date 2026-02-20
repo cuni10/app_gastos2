@@ -1,0 +1,84 @@
+/* Contenedor principal de la alerta (imita a .form-alt) */
+.custom-swal-popup {
+  background: var(--card-bg) !important;
+  border-radius: 24px !important;
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  color: var(--text-light) !important;
+}
+
+.custom-swal-text {
+  color: var(--text-muted) !important;
+  font-size: 1rem !important;
+}
+
+/* Título de la alerta (imita a .form-header h2) */
+.custom-swal-title {
+  color: var(--text-light) !important;
+  font-size: 1.5rem !important;
+}
+
+/* Inputs dentro de la alerta (imitan a .input-group-alt input) */
+.custom-swal-input {
+  width: 100% !important;
+  background: var(--bg-dark) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 10px !important;
+  padding: 12px;
+  color: white !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  font-size: 1rem !important;
+  margin: 10px 0 !important;
+  transition: border-color 0.2s;
+}
+
+/* Efecto focus para los inputs */
+.custom-swal-input:focus {
+  border-color: var(--primary-accent) !important;
+}
+
+/* Textos de relleno (placeholders) */
+.custom-swal-input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Botón de Guardar (imita a .btn-gradient) */
+.custom-swal-confirm {
+  background: var(--primary-accent) !important;
+  color: var(--text-light) !important;
+  padding: 12px 24px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition:
+    transform 0.2s,
+    filter 0.2s !important;
+}
+
+.custom-swal-confirm:hover {
+  transform: translateY(-3px) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* Botón de Cancelar (estilo secundario sutil) */
+.custom-swal-cancel {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border-subtle) !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition:
+    background 0.2s,
+    color 0.2s !important;
+}
+
+.custom-swal-cancel:hover {
+  background: var(--bg-dark) !important;
+  color: var(--text-light) !important;
+}

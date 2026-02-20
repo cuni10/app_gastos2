@@ -28,7 +28,7 @@ const dbManager = {
     db.exec(schema)
   },
 
-  //Delete queries
+  // Delete queries
 
   delHistorial: (id) => {
     try {
@@ -40,7 +40,7 @@ const dbManager = {
     }
   },
 
-  //Get queries
+  // Get queries
 
   getHistorial: () => {
     return db
@@ -132,10 +132,10 @@ const dbManager = {
   // Insert queries
 
   insertCategoria: (nombre, descripcion) => {
-    db.prepare('INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)').run(
-      nombre,
-      descripcion
-    )
+    const info = db
+      .prepare('INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)')
+      .run(nombre, descripcion)
+    return { id: info.lastInsertRowid, nombre, descripcion }
   },
   insertGastoConHistorial: (
     nombre,
@@ -189,6 +189,8 @@ const dbManager = {
     })
   },
 
+  // Update queries
+
   sincronizarPagosPendientes: () => {
     const date = new Date()
     const mes = date.getMonth() + 1
@@ -219,7 +221,6 @@ const dbManager = {
           const cuotasPagadas = gasto.cuotas_pagadas + 1
           let nuevoEstado = 'activo'
 
-          // Insertamos el registro de pago automático
           insertHistorial.run(
             gasto.id,
             gasto.monto,
@@ -227,8 +228,6 @@ const dbManager = {
             cuotasPagadas
           )
 
-          // Lógica de finalización: Solo si es tipo 'cuotas' y llegamos al total.
-          // Si es 'suscripcion', sigue activo por siempre.
           if (gasto.tipo_pago === 'cuotas' && gasto.cuotas > 0 && cuotasPagadas >= gasto.cuotas) {
             nuevoEstado = 'finalizado'
           }

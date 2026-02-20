@@ -95,7 +95,6 @@ app.whenReady().then(() => {
   })
   ipcMain.handle('db:insert-categoria', (event, categoria) => {
     const { nombre, descripcion } = categoria
-    dbManager.insertCategoria(nombre, descripcion)
     return dbManager.insertCategoria(nombre, descripcion)
   })
 

@@ -52,8 +52,7 @@ Instrucciones para levantar el proyecto en un entorno de desarrollo o producció
 1. **Clonar el repositorio:**
 
    ```bash
-   git clone [https://github.com/cuni10/app_gastos2.git](https://github.com/cuni10/app_gastos2.git)
-   cd app_gastos2
+   git clone https://github.com/cuni10/app_gastos2.git
    ```
 
 2. **Instalar dependencias:**

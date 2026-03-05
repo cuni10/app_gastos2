@@ -47,8 +47,10 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  // Establece el ID del modelo de usuario para Windows
+  // Crea la ventana principal de la aplicación
+  createWindow()
 
+  // Establece el ID del modelo de usuario para Windows
   electronApp.setAppUserModelId('com.electron')
 
   // IPC para controles de ventana
@@ -133,10 +135,6 @@ app.whenReady().then(() => {
   ipcMain.handle('db:sincronizar-pagos-pendientes', () => {
     return dbManager.sincronizarPagosPendientes()
   })
-
-  // Crea la ventana principal de la aplicación
-
-  createWindow()
 
   // Optimiza los atajos de teclado en desarrollo
 

@@ -51,6 +51,19 @@ app.whenReady().then(() => {
 
   electronApp.setAppUserModelId('com.electron')
 
+  // Crea la ventana principal lo antes posible para reducir el tiempo de arranque
+
+  createWindow()
+
+  // Sincroniza pagos pendientes directamente en el proceso principal,
+  // evitando el round-trip IPC desde el renderer
+
+  try {
+    dbManager.sincronizarPagosPendientes()
+  } catch (error) {
+    console.error('Error al sincronizar pagos pendientes:', error)
+  }
+
   // IPC para controles de ventana
 
   ipcMain.on('window-control', (event, action) => {
@@ -130,13 +143,6 @@ app.whenReady().then(() => {
       return { success: false, error: error.message }
     }
   })
-  ipcMain.handle('db:sincronizar-pagos-pendientes', () => {
-    return dbManager.sincronizarPagosPendientes()
-  })
-
-  // Crea la ventana principal de la aplicación
-
-  createWindow()
 
   // Optimiza los atajos de teclado en desarrollo
 

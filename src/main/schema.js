@@ -33,5 +33,10 @@ const schema = `
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
     );
+
+    CREATE INDEX IF NOT EXISTS idx_historial_gasto_id ON historial_gastos(gasto_id);
+    CREATE INDEX IF NOT EXISTS idx_historial_fecha_pago ON historial_gastos(fecha_pago);
+    CREATE INDEX IF NOT EXISTS idx_gastos_categoria_id ON gastos(categoria_id);
+    CREATE INDEX IF NOT EXISTS idx_gastos_estado ON gastos(estado);
 `
 export default schema

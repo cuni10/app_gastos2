@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { Calendar, Clock, ArrowDownRight, ArrowUpRight, Wallet } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -14,11 +14,37 @@ import '../css/Dashboard.css'
 
 import icon from '../../../../resources/logo.ico'
 
+// Isolated clock component so its 1-second interval doesn't re-render the whole Dashboard
+const ClockDisplay = memo(() => {
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  return (
+    <div className="header-info">
+      <div className="info-pill">
+        <Calendar size={16} />
+        <span>{currentTime.toLocaleDateString('es-AR')}</span>
+      </div>
+      <div className="info-pill">
+        <Clock size={16} />
+        <span>
+          {currentTime.toLocaleTimeString(['es-AR'], { hour: '2-digit', minute: '2-digit' })}
+        </span>
+      </div>
+    </div>
+  )
+})
+
+ClockDisplay.displayName = 'ClockDisplay'
+
 const Dashboard = () => {
   const [historial, setHistorial] = useState([])
   const [historialAnterior, setHistorialAnterior] = useState([])
   const [historialLastMoves, setHistorialLastMoves] = useState([])
-  const [currentTime, setCurrentTime] = useState(new Date())
   const [historialSeisMeses, setHistorialSeisMeses] = useState([])
   const navigate = useNavigate()
 
@@ -36,19 +62,18 @@ const Dashboard = () => {
       anio: new Date().getFullYear().toString()
     }
     const fetchData = async () => {
-      const datosMesActual = await window.api.getHistorialMes(mesActual)
-      const datosMesAnterior = await window.api.getHistorialMes(mesAnterior)
-      const datosSeisMeses = await window.api.getHistorialSeisMeses()
+      // Fetch all three data sets in parallel to reduce total wait time
+      const [datosMesActual, datosMesAnterior, datosSeisMeses] = await Promise.all([
+        window.api.getHistorialMes(mesActual),
+        window.api.getHistorialMes(mesAnterior),
+        window.api.getHistorialSeisMeses()
+      ])
       setHistorialSeisMeses(datosSeisMeses)
       setHistorialAnterior(datosMesAnterior)
       setHistorial(datosMesActual)
       setHistorialLastMoves(datosMesActual.slice(-5))
-      console.log(datosSeisMeses)
     }
     fetchData()
-
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
-    return () => clearInterval(timer)
   }, [])
 
   const nombreMes = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date())
@@ -76,18 +101,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="header-info">
-          <div className="info-pill">
-            <Calendar size={16} />
-            <span>{currentTime.toLocaleDateString('es-AR')}</span>
-          </div>
-          <div className="info-pill">
-            <Clock size={16} />
-            <span>
-              {currentTime.toLocaleTimeString(['es-AR'], { hour: '2-digit', minute: '2-digit' })}
-            </span>
-          </div>
-        </div>
+        <ClockDisplay />
       </header>
 
       <div className="dash-grid">

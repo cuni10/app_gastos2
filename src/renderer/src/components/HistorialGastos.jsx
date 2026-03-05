@@ -16,6 +16,8 @@ import Swal from 'sweetalert2'
 
 import withReactContent from 'sweetalert2-react-content'
 
+const MySwal = withReactContent(Swal)
+
 const HistorialGastos = () => {
   const [historial, setHistorial] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -25,8 +27,6 @@ const HistorialGastos = () => {
   const handleToggle = (id) => {
     setCardIsOpen(cardIsOpen === id ? null : id)
   }
-
-  const MySwal = withReactContent(Swal)
 
   const baseAlert = {
     background: 'var(--card-bg)',
@@ -67,7 +67,6 @@ const HistorialGastos = () => {
   useEffect(() => {
     const fetchHistorial = async () => {
       const datos = await window.api.getHistorial()
-      console.log('Datos del historial:', datos)
       setHistorial(datos)
     }
 

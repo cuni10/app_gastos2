@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Save, DollarSign, Tag, FileText, List, CirclePlus } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Save, DollarSign, Tag, FileText, List, CirclePlus, Plus, X } from 'lucide-react'
 import '../css/AgregarGasto.css'
 import { showAddCategoryAlert } from './categoryAlert'
 
@@ -7,6 +7,21 @@ const AgregarGasto = () => {
   const [categorias, setCategorias] = useState([])
   const [loading, setLoading] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState([])
+  const [fileErrors, setFileErrors] = useState([])
+  const [dragActive, setDragActive] = useState(false)
+  const fileInputRef = useRef(null)
+
+  const MAX_SIZE_IMAGE = 5 * 1024 * 1024
+  const MAX_SIZE_PDF = 3 * 1024 * 1024
+  const ALLOWED_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+    'image/bmp',
+    'application/pdf'
+  ]
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -101,7 +116,21 @@ const AgregarGasto = () => {
       cuotas_pagadas: 1
     }
     try {
-      await window.api.insertGastoConHistorial(formDataSql)
+      const result = await window.api.insertGastoConHistorial(formDataSql)
+      const gastoId = result?.id
+
+      if (gastoId && selectedFiles.length > 0) {
+        for (const file of selectedFiles) {
+          const filePath = window.api.getFilePath(file)
+          await window.api.uploadDocumento(gastoId, filePath)
+        }
+      }
+
+      if (result.success) {
+        setShowSuccess(true)
+        setTimeout(() => setShowSuccess(false), 6000)
+      }
+
       setFormData({
         nombre: '',
         monto: '',
@@ -112,13 +141,80 @@ const AgregarGasto = () => {
         cuotas: '',
         cuotas_pagadas: 0
       })
-      setShowSuccess(true)
-      setTimeout(() => setShowSuccess(false), 6000)
+      setSelectedFiles([])
+      setFileErrors([])
     } catch (error) {
       console.error(error)
     } finally {
       setLoading(false)
     }
+  }
+
+  const validateFile = (file) => {
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return `${file.name}: tipo no permitido`
+    }
+
+    const isPdf = file.type === 'application/pdf'
+    const maxSize = isPdf ? MAX_SIZE_PDF : MAX_SIZE_IMAGE
+    const maxLabel = isPdf ? '3MB' : '5MB'
+
+    if (file.size > maxSize) {
+      return `${file.name}: supera ${maxLabel}`
+    }
+
+    return null
+  }
+
+  const processFiles = (files) => {
+    const fileArray = Array.from(files)
+    const errors = []
+    const valid = []
+
+    for (const file of fileArray) {
+      const isDuplicate = selectedFiles.some((f) => f.name === file.name && f.size === file.size)
+      if (isDuplicate) continue
+
+      const validationError = validateFile(file)
+      if (validationError) {
+        errors.push(validationError)
+      } else {
+        valid.push(file)
+      }
+    }
+
+    if (errors.length > 0) setFileErrors(errors)
+    if (valid.length > 0) setSelectedFiles((prev) => [...prev, ...valid])
+  }
+
+  const handleFileChange = (e) => {
+    setFileErrors([])
+    processFiles(e.target.files || [])
+    e.target.value = ''
+  }
+
+  const handleDrag = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true)
+    } else if (e.type === 'dragleave') {
+      setDragActive(false)
+    }
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+    setFileErrors([])
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFiles(e.dataTransfer.files)
+    }
+  }
+
+  const removeSelectedFile = (index) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
   return (
@@ -239,6 +335,62 @@ const AgregarGasto = () => {
                   required
                 />
               </div>
+            </div>
+          )}
+        </div>
+
+        <div className="section-archivos">
+          <label>Facturas / Comprobantes</label>
+
+          <div
+            className={`drop-zone ${dragActive ? 'drag-active' : ''} ${selectedFiles.length > 0 ? 'has-files' : ''}`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".jpg,.jpeg,.png,.webp,.gif,.bmp,.pdf"
+              onChange={handleFileChange}
+              className="drop-zone-input"
+            />
+            <div className="drop-zone-icon">
+              <Plus size={28} />
+            </div>
+            <span className="drop-zone-text">
+              {dragActive ? 'Soltar aquí' : 'Arrastrá o hacé clic'}
+            </span>
+            <span className="drop-zone-hint">IMG hasta 5MB · PDF hasta 3MB</span>
+          </div>
+
+          {fileErrors.length > 0 && (
+            <div className="archivos-errors">
+              {fileErrors.map((error) => (
+                <span key={error}>{error}</span>
+              ))}
+            </div>
+          )}
+
+          {selectedFiles.length > 0 && (
+            <div className="archivos-list">
+              {selectedFiles.map((file, idx) => (
+                <div key={`${file.name}-${idx}`} className="archivo-item">
+                  <FileText size={16} className="archivo-icon" />
+                  <span className="archivo-name">{file.name}</span>
+                  <span className="archivo-size">{(file.size / 1024).toFixed(0)} KB</span>
+                  <button
+                    type="button"
+                    className="archivo-remove"
+                    onClick={() => removeSelectedFile(idx)}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
             </div>
           )}
         </div>

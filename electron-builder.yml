@@ -1,7 +1,7 @@
 appId: com.electron.app
 productName: app_gastos2
 directories:
-  buildResources: build
+  buildResources: resources
 files:
   - '!**/.vscode/*'
   - '!src/*'
@@ -10,13 +10,14 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
   - resources/**
+asar: true
 win:
   executableName: app_gastos2
   target:
     - portable
-  icon: build/logo.ico
+  icon: logo.ico
 portable:
-  artifactName: '${productName}_Portable.${ext}'
+  artifactName: 'JMT Automotores.${ext}'
   unpackDirName: 'app_gastos2_temp'
 nsis:
   artifactName: ${name}-${version}-setup.${ext}

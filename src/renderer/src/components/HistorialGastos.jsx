@@ -9,21 +9,43 @@ import {
   FileText,
   Search,
   Trash2,
-  ClipboardCheck
+  ClipboardCheck,
+  File,
+  Pencil
 } from 'lucide-react'
 import '../css/HistorialGastos.css'
 import Swal from 'sweetalert2'
+import DocumentosModal from './DocumentosModal'
+import EditarGastoModal from './EditarGastoModal'
 
 import withReactContent from 'sweetalert2-react-content'
 
 const HistorialGastos = () => {
   const [historial, setHistorial] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
-
   const [cardIsOpen, setCardIsOpen] = useState(null)
+  const [showDocumentosModal, setShowDocumentosModal] = useState(false)
+  const [gastoSeleccionado, setGastoSeleccionado] = useState(null)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editGastoId, setEditGastoId] = useState(null)
 
   const handleToggle = (id) => {
     setCardIsOpen(cardIsOpen === id ? null : id)
+  }
+
+  const handleShowDocumentos = (gasto) => {
+    setGastoSeleccionado(gasto)
+    setShowDocumentosModal(true)
+  }
+
+  const handleEdit = (gasto) => {
+    setEditGastoId(gasto.gasto_id || gasto.id)
+    setShowEditModal(true)
+  }
+
+  const handleEditUpdate = async () => {
+    const datos = await window.api.getHistorial()
+    setHistorial(datos)
   }
 
   const MySwal = withReactContent(Swal)
@@ -169,6 +191,12 @@ const HistorialGastos = () => {
                   </div>
                 </div>
                 <div className={`card-options ${cardIsOpen === gasto.id ? 'open' : ''}`}>
+                  <button className="btn-edit" onClick={() => handleEdit(gasto)}>
+                    <Pencil size={16} /> Editar
+                  </button>
+                  <button className="btn-documentos" onClick={() => handleShowDocumentos(gasto)}>
+                    <File size={16} /> Ver Documentos
+                  </button>
                   <button
                     className="btn-delete"
                     onClick={() => {
@@ -187,6 +215,29 @@ const HistorialGastos = () => {
           )}
         </div>
       </div>
+
+      {gastoSeleccionado && (
+        <DocumentosModal
+          isOpen={showDocumentosModal}
+          onClose={() => {
+            setShowDocumentosModal(false)
+            setGastoSeleccionado(null)
+          }}
+          gasto_id={gastoSeleccionado.gasto_id || gastoSeleccionado.id}
+          nombre_gasto={gastoSeleccionado.nombre}
+          onDocumentChange={handleEditUpdate}
+        />
+      )}
+
+      <EditarGastoModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false)
+          setEditGastoId(null)
+        }}
+        gastoId={editGastoId}
+        onUpdate={handleEditUpdate}
+      />
     </div>
   )
 }

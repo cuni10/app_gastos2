@@ -67,6 +67,20 @@
   border-left: 4px solid transparent;
   color: var(--text-light);
   border-radius: 9px;
+  position: relative;
+}
+
+.expense-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%; /* Crea el "gap" superior */
+  height: 70%; /* Altura de la línea (centrada) */
+  width: 4px; /* El grosor que tenías */
+  background-color: var(--primary-accent);
+  border-radius: 4px; /* Redondea solo el lado derecho de la línea */
+
+  opacity: 0;
 }
 
 .not-expense-card {
@@ -80,8 +94,10 @@
   font-weight: 600;
 }
 
-.expense-card:hover {
-  border-left-color: var(--primary-accent);
+/* Al hacer hover, mostramos la línea */
+.expense-card:hover::before {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .expense-icon-wrapper {
@@ -115,8 +131,10 @@
   font-size: 1.9rem;
 }
 .expense-note {
+  color: var(--text-muted) !important;
   display: flex;
   visibility: hidden;
+  font-size: 0.9rem !important;
 }
 .is-active {
   margin-bottom: 0.5rem;
@@ -158,6 +176,7 @@
 
 .card-options {
   overflow: hidden;
+  display: flex;
   transition:
     max-height 0.3s ease-out,
     opacity 0.3s ease;
@@ -165,7 +184,7 @@
   opacity: 0;
 }
 .card-options button {
-  margin: 20px;
+  margin: 0 0 10px 10px;
 }
 .card-options.open {
   max-height: 200px;
@@ -188,15 +207,57 @@
   transition: transform 0.2s;
 }
 
+.btn-documentos {
+  background: #4caf50;
+  color: var(--text-light);
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.2s;
+}
+
+.btn-documentos:hover {
+  filter: brightness(1.1);
+}
+
+.btn-edit {
+  background: #2196f3;
+  color: var(--text-light);
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.2s;
+}
+
+.btn-edit:hover {
+  filter: brightness(1.1);
+}
+
+.btn-delete:hover {
+  filter: brightness(1.1);
+}
+
 .wrapper {
-  padding: 1rem;
+  padding: 0.7rem;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
+  gap: 0.7rem;
   transition: transform 0.2s ease;
-  border-left: 4px solid transparent;
-  border-radius: 9px;
   cursor: pointer;
 }

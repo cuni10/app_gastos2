@@ -33,5 +33,31 @@ const schema = `
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
     );
+
+    CREATE TABLE IF NOT EXISTS documentos_gastos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        gasto_id INTEGER NOT NULL,
+        nombre_original TEXT NOT NULL,
+        nombre_archivo TEXT NOT NULL,
+        ruta TEXT NOT NULL,
+        tipo TEXT NOT NULL,
+        tamaño_original INTEGER,
+        tamaño_comprimido INTEGER,
+        comprimido BOOLEAN DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+        foreign KEY (gasto_id) REFERENCES gastos(id)
+        ON UPDATE RESTRICT
+        ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS sincronizaciones (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        gasto_id INTEGER NOT NULL,
+        mes INTEGER NOT NULL,
+        anio INTEGER NOT NULL,
+        UNIQUE(gasto_id, mes, anio),
+        FOREIGN KEY (gasto_id) REFERENCES gastos(id) ON DELETE CASCADE
+    );
 `
 export default schema

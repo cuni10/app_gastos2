@@ -1,11 +1,12 @@
-import { StrictMode } from 'react'
+import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 
 import Dashboard from './pages/Dashboard'
-import Historial from './pages/Historial'
-import Agregar from './pages/Agregar'
 import Root from './Root'
+
+const Historial = lazy(() => import('./pages/Historial'))
+const Agregar = lazy(() => import('./pages/Agregar'))
 
 const router = createHashRouter([
   {
@@ -18,11 +19,19 @@ const router = createHashRouter([
       },
       {
         path: 'historial',
-        element: <Historial />
+        element: (
+          <Suspense fallback={<div className="page-loading">Cargando...</div>}>
+            <Historial />
+          </Suspense>
+        )
       },
       {
         path: 'agregar',
-        element: <Agregar />
+        element: (
+          <Suspense fallback={<div className="page-loading">Cargando...</div>}>
+            <Agregar />
+          </Suspense>
+        )
       }
     ]
   }

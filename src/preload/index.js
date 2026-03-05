@@ -12,9 +12,7 @@ const api = {
   getHistorialSeisMeses: () => ipcRenderer.invoke('db:get-historial-seis-meses'),
 
   insertCategoria: (categoria) => ipcRenderer.invoke('db:insert-categoria', categoria),
-  insertGastoConHistorial: (gasto) => ipcRenderer.invoke('db:insert-gasto-con-historial', gasto),
-
-  sincronizarPagosPendientes: () => ipcRenderer.invoke('db:sincronizar-pagos-pendientes')
+  insertGastoConHistorial: (gasto) => ipcRenderer.invoke('db:insert-gasto-con-historial', gasto)
 }
 
 if (process.contextIsolated) {

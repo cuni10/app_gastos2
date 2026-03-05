@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Save, DollarSign, Tag, FileText, List, CirclePlus } from 'lucide-react'
 import '../css/AgregarGasto.css'
-import { showAddCategoryAlert } from './categoryAlert'
+import { showAddCategoryAlert } from './CategoryAlert'
 
 const AgregarGasto = () => {
   const [categorias, setCategorias] = useState([])

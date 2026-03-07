@@ -100,15 +100,15 @@ const Dashboard = () => {
             <span className="label">Gasto total en {mesActual}</span>
             <h2 className="amount">${totalMesActual.toLocaleString('es-AR')}</h2>
 
-            {porcentajeDiferencia > 0 && !Infinity ? (
+            {porcentajeDiferencia > 0 && porcentajeDiferencia != Infinity ? (
               <div className="trend negative">
                 <ArrowUpRight size={16} />
-                <span>Gastaste {porcentajeDiferencia}% mas que el mes anterior.</span>
+                <span>{porcentajeDiferencia}% mas que el mes anterior.</span>
               </div>
-            ) : porcentajeDiferencia < 0 && !-Infinity ? (
+            ) : porcentajeDiferencia < 0 && -Infinity ? (
               <div className="trend positive">
                 <ArrowDownRight size={16} />
-                <span>Gastaste {porcentajeDiferencia}% menos que el mes anterior.</span>
+                <span>{porcentajeDiferencia}% menos que el mes anterior.</span>
               </div>
             ) : (
               <div className="trend">
